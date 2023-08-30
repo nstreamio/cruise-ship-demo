@@ -1,0 +1,33 @@
+@kernel(class: "swim.meta.MetaKernel")
+
+tutorial: @fabric {
+    @plane(class: "com.rccl.examples.monitoring.RCCLPlane")
+
+    @node {
+        pattern: "/ship/:shipCode/deck/:deckNumber"
+        @agent(class: "com.rccl.examples.monitoring.agent.DeckAgent")
+    }
+    @node {
+        pattern: "/ship/:shipCode/deck/:deckNumber/room/:roomNumber"
+        @agent(class: "com.rccl.examples.monitoring.agent.StateRoomAgent")
+    }
+    @node {
+        pattern: "/ship/:shipCode/hvac/:hvacUnit"
+        @agent(class: "com.rccl.examples.monitoring.agent.HvacAgent")
+    }
+    @node {
+        uri: "/ship/icon"
+        @agent(class: "com.rccl.examples.monitoring.agent.ShipAgent") {
+            seed: "/ships/icon/icon.json"
+        }
+    }
+}
+
+@web(port: 9001) {
+    space: "tutorial"
+    documentRoot: "./ui/"
+    @websocket {
+        serverCompressionLevel: 0# -1 = default; 0 = off; 1-9 = deflate level
+        clientCompressionLevel: 0# -1 = default; 0 = off; 1-9 = deflate level
+    }
+}
