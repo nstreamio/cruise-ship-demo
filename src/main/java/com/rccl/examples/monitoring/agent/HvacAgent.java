@@ -1,15 +1,15 @@
 package com.rccl.examples.monitoring.agent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
 import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
 import swim.api.lane.ValueLane;
 import swim.structure.Record;
 
-import java.util.logging.Logger;
-
 public class HvacAgent extends AbstractAgent {
-  private static final Logger log = Logger.getLogger(HvacAgent.class.getName());
+  private static final Logger log = LoggerFactory.getLogger(HvacAgent.class);
 
   @SwimLane("info")
   final ValueLane<Record> info = this.valueLane();

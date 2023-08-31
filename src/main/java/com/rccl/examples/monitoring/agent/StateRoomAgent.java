@@ -1,5 +1,7 @@
 package com.rccl.examples.monitoring.agent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
 import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
@@ -10,10 +12,9 @@ import swim.structure.Record;
 import swim.structure.Value;
 
 import java.time.Duration;
-import java.util.logging.Logger;
 
 public class StateRoomAgent extends AbstractAgent {
-  private static final Logger log = Logger.getLogger(StateRoomAgent.class.getName());
+  private static final Logger log = LoggerFactory.getLogger(StateRoomAgent.class);
 
   @SwimLane("info")
   ValueLane<Record> info = this.valueLane();
@@ -48,9 +49,7 @@ public class StateRoomAgent extends AbstractAgent {
 
   @Override
   public void didStart() {
-    log.info(
-        String.format("Started: %s", nodeUri())
-    );
+    log.debug("Started: {}", nodeUri());
 
     /*
     When the agent loads set the last time occupancy was detected to now.

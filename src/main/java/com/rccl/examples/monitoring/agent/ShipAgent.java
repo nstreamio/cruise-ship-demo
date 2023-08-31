@@ -2,6 +2,8 @@ package com.rccl.examples.monitoring.agent;
 
 import com.rccl.examples.monitoring.ResourceUtils;
 import com.rccl.examples.monitoring.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
 import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
@@ -12,12 +14,10 @@ import swim.structure.Record;
 import swim.structure.Value;
 import swim.warp.CommandMessage;
 
-import java.util.logging.Logger;
-
 import static com.rccl.examples.monitoring.Utils.logCommand;
 
 public class ShipAgent extends AbstractAgent {
-  private static final Logger log = Logger.getLogger(ShipAgent.class.getName());
+  private static final Logger log = LoggerFactory.getLogger(ShipAgent.class);
 
   @SwimLane("info")
   ValueLane<Record> info = this.valueLane();
@@ -31,9 +31,7 @@ public class ShipAgent extends AbstractAgent {
           String.format("Attempting to load seed data for '%s' but 'seed' prop was not set to a value.", this.nodeUri())
       );
     }
-    log.info(
-        String.format("Loading seed data for %s from %s.", this.nodeUri(), seedResource)
-    );
+    log.info("Loading seed data for {} from {}.", this.nodeUri(), seedResource);
     Value shipValue = ResourceUtils.loadJsonResource(this.getClass(), seedResource);
 
 
@@ -58,6 +56,7 @@ public class ShipAgent extends AbstractAgent {
         record.slot("shipCode", shipCode);
         Integer deckNumber = record.getSlot("deckNumber").intValue();
         String deckNodeUri = String.format("/ship/%s/deck/%s", shipCode, deckNumber);
+        // Register each deck of the ship.
         command(deckNodeUri, "init", record, logCommand(log));
       });
 

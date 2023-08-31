@@ -1,5 +1,7 @@
 package com.rccl.examples.monitoring.agent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
 import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
@@ -8,20 +10,17 @@ import swim.structure.Record;
 import swim.structure.Value;
 import swim.uri.Uri;
 
-import java.util.logging.Logger;
-
 import static com.rccl.examples.monitoring.Utils.logCommand;
 
 public class DeckAgent extends AbstractAgent {
-  private static final Logger log = Logger.getLogger(DeckAgent.class.getName());
+  private static final Logger log = LoggerFactory.getLogger(DeckAgent.class);
+
   @SwimLane("deckNumber")
   ValueLane<Integer> deckNumber = this.valueLane();
 
   @Override
   public void didStart() {
-    log.info(
-        String.format("Started: %s", nodeUri())
-    );
+    log.debug("Started: {}", nodeUri());
   }
 
   @SwimLane("init")
@@ -31,6 +30,7 @@ public class DeckAgent extends AbstractAgent {
         String shipCode = input.getSlot("shipCode").stringValue();
 
         Value hvacUnits = input.getSlot("hvacUnits");
+        // Register each one of the HVAC units for the deck
         if (null != hvacUnits && hvacUnits.isDefined()) {
           hvacUnits.forEach(item -> {
             Record record = Record.of()
@@ -42,9 +42,8 @@ public class DeckAgent extends AbstractAgent {
           });
         }
 
-
         Value staterooms = input.getSlot("staterooms");
-
+        // Register each on of the staterooms for the ship
         if (null != staterooms && staterooms.isDefined()) {
           staterooms.forEach(item -> {
             int roomNumber = item.getSlot("roomNumber").intValue();

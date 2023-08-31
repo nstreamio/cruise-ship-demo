@@ -1,13 +1,13 @@
 package com.rccl.examples.monitoring;
 
 import com.rccl.examples.monitoring.agent.DeckAgent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import swim.kernel.Kernel;
 import swim.server.ServerLoader;
 
-import java.util.logging.Logger;
-
 public class EntryPoint {
-  private static final Logger log = Logger.getLogger(DeckAgent.class.getName());
+  private static final Logger log = LoggerFactory.getLogger(EntryPoint.class);
 
   public static void main(String[] args) throws Exception {
     final Kernel kernel = ServerLoader.loadServer();
