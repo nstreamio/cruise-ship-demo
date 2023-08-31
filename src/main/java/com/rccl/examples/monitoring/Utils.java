@@ -11,10 +11,11 @@ public class Utils {
       @Override
       public void bind(CommandMessage commandMessage) {
         log.trace(
-            "Command Called\n" +
-                "  nodeUrl: {}}\n" +
-                "  laneUri: {}}\n" +
-                "  body: {}}",
+            """
+                Command Called
+                  nodeUrl: {}
+                  laneUri: {}
+                  body: {}""",
             commandMessage.nodeUri(),
             commandMessage.laneUri(),
             commandMessage.body()
