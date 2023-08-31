@@ -28,6 +28,11 @@ public class StateRoomAgent extends AbstractAgent {
   @SwimLane("roomTemperature")
   final ValueLane<Integer> roomTemperature = this.valueLane();
 
+  /**
+   * This timer looks at the values for when the occupancy was last detected. If the last time
+   * we have detected someone in the room is more than 2 hours ago, alter the HVAC to the ECO
+   * setting of 78.
+   */
   final TimerRef occupancyTimer = this.setTimer(1000, () -> {
     long lastOccupancyDetected = occupancyDetected.get();
     long durationMs = System.currentTimeMillis() - lastOccupancyDetected;
@@ -55,7 +60,6 @@ public class StateRoomAgent extends AbstractAgent {
     When the agent loads set the last time occupancy was detected to now.
      */
     this.occupancyDetected.set(System.currentTimeMillis());
-
   }
 
   @SwimLane("processOpcUaTag")

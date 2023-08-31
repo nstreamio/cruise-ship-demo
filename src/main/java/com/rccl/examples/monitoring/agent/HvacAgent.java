@@ -20,7 +20,10 @@ public class HvacAgent extends AbstractAgent {
   @SwimLane("adjustTemperature")
   final CommandLane<Record> adjustTemperature = this.<Record>commandLane()
       .onCommand(input -> {
+        String hvacZone = input.getSlot("hvacZone").stringValue();
+        int temperature = input.getSlot("temperature").intValue();
 
+        log.info("{}: Adjusting temperature for zone {} to {}", nodeUri(), hvacZone, temperature);
       });
 
   @SwimLane("init")
