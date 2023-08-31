@@ -47,6 +47,12 @@ public class DeckAgent extends AbstractAgent {
         if (null != staterooms && staterooms.isDefined()) {
           staterooms.forEach(item -> {
             int roomNumber = item.getSlot("roomNumber").intValue();
+            String hvacZone = item.getSlot("hvacZone").stringValue();
+            String hvacUnit = item.getSlot("hvacUnit").stringValue();
+
+            String hvacZoneUri = String.format("/ship/%s/hvac/%s/zone/%s", shipCode, hvacUnit, hvacZone);
+            command(hostUri(), Uri.parse(hvacZoneUri), Uri.parse("init"), item.toValue(), logCommand(log));
+
             String stateroomUri = String.format("/ship/%s/deck/%s/room/%s", shipCode, deckNumber, roomNumber);
             command(hostUri(), Uri.parse(stateroomUri), Uri.parse("init"), item.toValue(), logCommand(log));
           });

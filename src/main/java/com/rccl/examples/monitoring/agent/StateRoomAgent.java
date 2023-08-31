@@ -4,20 +4,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
 import swim.api.agent.AbstractAgent;
+import swim.api.http.HttpLane;
 import swim.api.lane.CommandLane;
 import swim.api.lane.ValueLane;
 import swim.concurrent.TimerRef;
-import swim.observable.function.WillSet;
+import swim.http.HttpMethod;
+import swim.http.HttpResponse;
+import swim.http.HttpStatus;
 import swim.structure.Record;
 import swim.structure.Value;
 
 import java.time.Duration;
+import java.util.Date;
 
 public class StateRoomAgent extends AbstractAgent {
   private static final Logger log = LoggerFactory.getLogger(StateRoomAgent.class);
 
   @SwimLane("info")
   ValueLane<Record> info = this.valueLane();
+
+  @SwimLane("ecoModeEnabled")
+  final ValueLane<Boolean> ecoModeEnabled = this.valueLane();
 
   @SwimLane("occupancyDetected")
   ValueLane<Long> occupancyDetected = this.valueLane();
@@ -33,22 +40,29 @@ public class StateRoomAgent extends AbstractAgent {
    * we have detected someone in the room is more than 2 hours ago, alter the HVAC to the ECO
    * setting of 78.
    */
-  final TimerRef occupancyTimer = this.setTimer(1000, () -> {
+  static final int OCCUPANCY_TIMER_INTERVAL = 1000;
+  final TimerRef occupancyTimer = this.setTimer(OCCUPANCY_TIMER_INTERVAL, () -> {
     long lastOccupancyDetected = occupancyDetected.get();
     long durationMs = System.currentTimeMillis() - lastOccupancyDetected;
     Duration duration = Duration.ofMillis(durationMs);
     final Duration hvacAdjustDuration = Duration.ofHours(2);
 
-    if(duration.compareTo(hvacAdjustDuration) > 0) {
-      String shipCode = info.get().getSlot("shipCode").stringValue();
-      String hvacUnit = info.get().getSlot("hvacUnit").stringValue();
-      String hvacZone = info.get().getSlot("hvacZone").stringValue();
+    try {
+      boolean ecoModeEnabled = this.ecoModeEnabled.get();
+      if (!ecoModeEnabled && duration.compareTo(hvacAdjustDuration) > 0) {
+        String shipCode = info.get().getSlot("shipCode").stringValue();
+        String hvacUnit = info.get().getSlot("hvacUnit").stringValue();
+        String hvacZone = info.get().getSlot("hvacZone").stringValue();
 
-      String hvacUri = String.format("/ship/%s/hvac/%s", shipCode, hvacUnit);
-      Value payload = Record.create()
-          .slot("hvacZone", hvacZone)
-          .slot("temperature", 78);
-      command(hvacUri, "adjustTemperature", payload);
+        log.info("occupancyTimer: No motion detected in the room for {}. Enabling Eco Mode.", duration);
+        String hvacZoneUri = String.format("/ship/%s/hvac/%s/zone/%s", shipCode, hvacUnit, hvacZone);
+        Value payload = Record.create()
+            .slot("temperature", 78);
+        command(hvacZoneUri, "adjustTemperature", payload);
+        this.ecoModeEnabled.set(true);
+      }
+    } finally {
+      this.occupancyTimer.reschedule(OCCUPANCY_TIMER_INTERVAL);
     }
   });
 
@@ -60,7 +74,29 @@ public class StateRoomAgent extends AbstractAgent {
     When the agent loads set the last time occupancy was detected to now.
      */
     this.occupancyDetected.set(System.currentTimeMillis());
+    this.ecoModeEnabled.set(false);
   }
+
+  @SwimLane("simulate")
+  HttpLane<Value> simulate = this.<Value>httpLane()
+      .doRespond(request -> {
+        HttpResponse response;
+        if (HttpMethod.POST == request.method()) {
+          String action = request.uri().query().get("action");
+          if ("leaveroom".equals(action)) {
+            long occupancyTime = System.currentTimeMillis() - Duration.ofHours(3).toMillis();
+            this.occupancyDetected.set(occupancyTime);
+            this.ecoModeEnabled.set(false);
+            response = HttpResponse.create(HttpStatus.OK).body(String.format("Adjusting occupancyDetected to %s", new Date(occupancyTime)));
+          } else {
+            response = HttpResponse.create(HttpStatus.BAD_REQUEST).body(String.format("Unknown action %s\n", action));
+          }
+        } else {
+          response = HttpResponse.create(HttpStatus.OK).body("Hello World");
+        }
+        return response;
+      });
+
 
   @SwimLane("processOpcUaTag")
   final CommandLane<Record> processOpcUaTag = this.<Record>commandLane()

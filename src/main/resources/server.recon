@@ -16,6 +16,10 @@ tutorial: @fabric {
         @agent(class: "com.rccl.examples.monitoring.agent.HvacAgent")
     }
     @node {
+        pattern: "/ship/:shipCode/hvac/:hvacUnit/zone/:zoneId"
+        @agent(class: "com.rccl.examples.monitoring.agent.HvacZoneAgent")
+    }
+    @node {
         uri: "/ship/icon"
         @agent(class: "com.rccl.examples.monitoring.agent.ShipAgent") {
             seed: "/ships/icon/icon.json"

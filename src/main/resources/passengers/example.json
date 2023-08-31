@@ -1,0 +1,12 @@
+{
+  "passengers": {
+    "123493123": {
+      "info": {
+        "id": 123493123,
+        "firstName": "Fred",
+        "lastName": "Smith"
+      },
+      "preferredTemperature": 60
+    }
+  }
+}
