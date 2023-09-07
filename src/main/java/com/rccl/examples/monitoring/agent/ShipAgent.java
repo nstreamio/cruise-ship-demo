@@ -16,11 +16,25 @@ import swim.warp.CommandMessage;
 
 import static com.rccl.examples.monitoring.Utils.logCommand;
 
-public class ShipAgent extends AbstractAgent {
+public class ShipAgent extends RCCLAbstractAgent {
   private static final Logger log = LoggerFactory.getLogger(ShipAgent.class);
 
   @SwimLane("info")
   ValueLane<Record> info = this.valueLane();
+
+  @SwimLane("decks")
+  final JoinValueLane<Value, Value> decks = this.<Value, Value>joinValueLane();
+
+  @SwimLane("addDeck")
+  final CommandLane<Value> addDeck = this.<Value>commandLane()
+      .onCommand(input -> {
+        log.trace("addDeck: {}", input);
+        Value deckUri = input.getSlot("deckUri");
+        this.decks.downlink(deckUri)
+            .nodeUri(deckUri.stringValue())
+            .laneUri("deckNumber")
+            .open();
+      });
 
   @Override
   public void didStart() {

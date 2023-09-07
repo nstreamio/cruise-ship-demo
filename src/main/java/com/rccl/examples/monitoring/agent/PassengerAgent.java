@@ -5,7 +5,7 @@ import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
 import swim.api.lane.ValueLane;
 
-public class PassengerAgent extends AbstractAgent {
+public class PassengerAgent extends RCCLAbstractAgent {
   @SwimLane("info")
   final ValueLane<Record> info = this.valueLane();
 
