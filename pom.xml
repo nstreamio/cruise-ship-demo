@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.rccl</groupId>
+    <artifactId>rccl-hvac</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <swimos.version>4.0.1</swimos.version>
+        <slf4j.version>2.0.7</slf4j.version>
+    </properties>
+
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.swimos</groupId>
+            <artifactId>swim-server</artifactId>
+            <version>${swimos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.swimos</groupId>
+            <artifactId>swim-meta</artifactId>
+            <version>${swimos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.swimos</groupId>
+            <artifactId>swim-client</artifactId>
+            <version>${swimos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <!-- Added to get the Atmosphere 1.1.0-SNAPSHOT, can be removed when 1.1.0 is released -->
+        <repository>
+            <id>oss.sonatype.org-snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+
+        </plugins>
+    </build>
+
+</project>
