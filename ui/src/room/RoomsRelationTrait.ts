@@ -1,11 +1,11 @@
 // Copyright 2015-2022 Swim.inc
 // All rights reserved.
 
-import {type Value} from "@swim/structure";
-import {MapDownlink} from "@swim/client";
-import {RelationTrait} from "@swim/domain";
-import {RoomEntityTrait} from "./RoomEntityTrait";
-import { Observes, Strings } from "@swim/util";
+import { type Value } from "@swim/structure";
+import { MapDownlink } from "@swim/client";
+import { RelationTrait } from "@swim/domain";
+import { RoomEntityTrait } from "./RoomEntityTrait";
+import { Numbers, Observes, Strings } from "@swim/util";
 import { TraitModelSet } from "@swim/model";
 import { Uri } from "@swim/uri";
 
@@ -26,21 +26,26 @@ export class RoomsRelationTrait extends RelationTrait<RoomEntityTrait> {
       // Create the room entity
       const roomId = roomTrait.id.value!;
       roomTrait.title.setIntrinsic(roomId);
-      roomTrait.nodeUri.setIntrinsic("/room/" + roomId);
-      // Insert the portal (board of widgets) into the room entity
+      const roomTraitNodeUri = this.owner.nodeUri.value + "/room/" + roomId;
+      roomTrait.nodeUri.setIntrinsic(roomTraitNodeUri);
       roomTrait.portal.insertModel();
     },
     compareTraits(a: RoomEntityTrait, b: RoomEntityTrait): number {
-      // Sort the room navigation alphabetically
-      return Strings.compare(a.title.value, b.title.value);
+      // Sort the deck navigation by deck number
+      return Numbers.compare(
+        Number.parseInt(a.id.value ?? "0"),
+        Number.parseInt(b.id.value ?? "0")
+      );
     },
   })
-  override readonly entities!: TraitModelSet<this, RoomEntityTrait> & RelationTrait<RoomEntityTrait>["entities"] & Observes<RoomEntityTrait>;
+  override readonly entities!: TraitModelSet<this, RoomEntityTrait> &
+    RelationTrait<RoomEntityTrait>["entities"] &
+    Observes<RoomEntityTrait>;
 
   // Open a downlink to the backend to get the map of rooms, we can use this to create the navigation list
   // The nodeUri of the downlink is inferred from the parent (the deck)
   @MapDownlink({
-    laneUri: "rooms",
+    laneUri: "stateRooms",
     keyForm: Uri.form(),
     consumed: true,
     didUpdate(nodeUri: Uri, status: Value): void {
@@ -55,7 +60,7 @@ export class RoomsRelationTrait extends RelationTrait<RoomEntityTrait> {
     didRemove(nodeUri: Uri, status: Value): void {
       // When an room is removed in the backend, remove it from the navigation/relation
       this.owner.removeChild(nodeUri.pathName);
-    }
+    },
   })
   readonly rooms!: MapDownlink<this, Uri, Value>;
 }

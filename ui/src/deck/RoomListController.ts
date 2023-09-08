@@ -2,8 +2,8 @@
 // All rights reserved.
 
 import { PanelView } from "@swim/panel";
-import { TimeTableController} from "@swim/widget";
-import {View, ViewRef} from "@swim/view";
+import { TimeTableController } from "@swim/widget";
+import { View, ViewRef } from "@swim/view";
 import { MapDownlink, ValueDownlink } from "@swim/client";
 import { Value } from "@swim/structure";
 import { TraitViewRef } from "@swim/controller";
@@ -14,21 +14,17 @@ import { Uri } from "@swim/uri";
 import { Length } from "@swim/math";
 import { Look } from "@swim/theme";
 import { RoomController } from "./RoomController";
-import { RoomStatus } from "../types";
-// import { ChartView } from "@swim/chart";
-// import { DateTime } from "@swim/time";
-// import { Observes } from "@swim/util";
 
 /** @public */
 export class RoomListController extends TimeTableController {
-  
   readonly listEcoMode: boolean;
 
   constructor(listEcoMode: boolean) {
     super();
-    this.setKey(`RoomListController-${listEcoMode ? 'ecoMode' : 'recentlyOccupied'}`);
+    this.setKey(
+      `RoomListController-${listEcoMode ? "ecoMode" : "recentlyOccupied"}`
+    );
     this.listEcoMode = listEcoMode;
-    console.log('RLC constructor with this.listEcoMode value of : ', listEcoMode);
   }
 
   @TraitViewRef({
@@ -46,16 +42,14 @@ export class RoomListController extends TimeTableController {
           marginTop: 48,
           marginBottom: 24,
         },
-        classList: ['rlc-table-panel'],
+        classList: ["rlc-table-panel"],
       });
-      this.owner.table.insertView();  // Insert the table when we insert this panel
-      this.owner.header.insertView();  // Insert the table's header when we insert this panel
-
-      // open downlink
-      // this.owner.shipStatusDownlink.open();
+      this.owner.table.insertView(); // Insert the table when we insert this panel
+      this.owner.header.insertView(); // Insert the table's header when we insert this panel
     },
   })
-  override readonly panel!: TraitViewRef<this, Trait, PanelView> & TimeTableController["panel"];
+  override readonly panel!: TraitViewRef<this, Trait, PanelView> &
+    TimeTableController["panel"];
 
   @ViewRef({
     extends: true,
@@ -68,7 +62,8 @@ export class RoomListController extends TimeTableController {
       return headerView;
     },
   })
-  override readonly header!: ViewRef<this, HeaderView> & TimeTableController["header"];
+  override readonly header!: ViewRef<this, HeaderView> &
+    TimeTableController["header"];
 
   @ViewRef({
     extends: true,
@@ -78,24 +73,50 @@ export class RoomListController extends TimeTableController {
         style: {
           margin: 0,
           marginTop: 36,
-        }
+        },
       });
     },
   })
-  override readonly tablePanel!: ViewRef<this, PanelView> & TimeTableController["tablePanel"];
+  override readonly tablePanel!: ViewRef<this, PanelView> &
+    TimeTableController["tablePanel"];
 
   @ViewRef({
     extends: true,
     createLayout(): TableLayout {
       const cols = new Array<ColLayout>();
-      cols.push(ColLayout.create("deck", 1, 1, '100px', false, false, Look.accentColor));
-      cols.push(ColLayout.create("room", 1, 1, '100px', false, false, Look.accentColor));
-      cols.push(ColLayout.create("hvacTemp", 1, 1, '100px', false, false, Look.accentColor));
-      cols.push(ColLayout.create("timeSinceOccupied", 2, 2, '144px', false, false, Look.accentColor));
+      cols.push(
+        ColLayout.create("deck", 1, 1, "100px", false, false, Look.accentColor)
+      );
+      cols.push(
+        ColLayout.create("room", 1, 1, "100px", false, false, Look.accentColor)
+      );
+      cols.push(
+        ColLayout.create(
+          "hvacTemp",
+          1,
+          1,
+          "100px",
+          false,
+          false,
+          Look.accentColor
+        )
+      );
+      cols.push(
+        ColLayout.create(
+          "timeSinceOccupied",
+          2,
+          2,
+          "144px",
+          false,
+          false,
+          Look.accentColor
+        )
+      );
       return new TableLayout(null, null, null, Length.px(12), cols);
     },
   })
-  override readonly table!: ViewRef<this, TableView> & TimeTableController["table"];
+  override readonly table!: ViewRef<this, TableView> &
+    TimeTableController["table"];
 
   @ViewRef({
     viewType: ColView,
@@ -158,18 +179,27 @@ export class RoomListController extends TimeTableController {
     keyForm: Uri.form(),
     consumed: true,
     didUpdate(nodeUri: Uri, value: Value): void {
-      let roomController = this.owner.getChild(nodeUri.pathName, RoomController);
+      let roomController = this.owner.getChild(
+        nodeUri.pathName,
+        RoomController
+      );
       let ecoModeEnabled = value.get("ecoModeEnabled").booleanValue(false);
-      
-      if (roomController === null && this.owner.listEcoMode === ecoModeEnabled) {
+
+      if (
+        roomController === null &&
+        this.owner.listEcoMode === ecoModeEnabled
+      ) {
         // create new RoomController (row in list)
-        roomController = new RoomController(nodeUri.toString(), this.owner.listEcoMode);
+        roomController = new RoomController(
+          nodeUri.toString(),
+          this.owner.listEcoMode
+        );
 
         // insert leaf of RoomController (row)
         roomController.leaf.insertView().set({
           style: {
-            cursor: 'pointer',
-          }
+            cursor: "pointer",
+          },
         });
 
         // insert cells into row
@@ -184,16 +214,19 @@ export class RoomListController extends TimeTableController {
         // add newly created controller this this.series ControllerSet
         this.owner.series.addController(roomController, null, nodeUri.pathName);
       }
-      
+
       // remove roomController if its status does not fit this column anymore
-      if (roomController !== null && this.owner.listEcoMode !== ecoModeEnabled) {
+      if (
+        roomController !== null &&
+        this.owner.listEcoMode !== ecoModeEnabled
+      ) {
         this.owner.removeChild(nodeUri.pathName);
       }
     },
-      didRemove(nodeUri: Uri) {
-        // When an room is removed in the backend, remove it from the list
-        this.owner.removeChild(nodeUri.pathName);
-      }
+    didRemove(nodeUri: Uri) {
+      // When an room is removed in the backend, remove it from the list
+      this.owner.removeChild(nodeUri.pathName);
+    },
   })
   readonly roomDownlink!: MapDownlink<this, Uri, Value>;
 }
