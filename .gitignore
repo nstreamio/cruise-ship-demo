@@ -23,3 +23,8 @@
 hs_err_pid*
 replay_pid*
 target
+
+# ui stuff
+node_modules
+build
+package-lock.json
