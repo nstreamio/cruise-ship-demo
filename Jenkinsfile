@@ -1,3 +1,3 @@
 library('jenkins-pipeline')
 
-demoPipeline("rccl-hvac")
+mavenDemoPipeline("rccl-hvac")
