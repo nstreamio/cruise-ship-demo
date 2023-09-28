@@ -5,7 +5,7 @@ import { Strings, Observes, Numbers } from "@swim/util";
 import { type Value } from "@swim/structure";
 import { MapDownlink } from "@swim/client";
 import { TraitModelSet } from "@swim/model";
-import { RelationTrait } from "@swim/domain";
+import { RelationTrait } from "@nstream/domain";
 import { DeckEntityTrait } from "./DeckEntityTrait";
 import { Uri } from "@swim/uri";
 

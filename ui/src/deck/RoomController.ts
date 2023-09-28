@@ -9,9 +9,9 @@ import type { View } from "@swim/view";
 import { ViewRef } from "@swim/view";
 import { CellView, LeafView } from "@swim/table";
 import { TextCellView } from "@swim/table";
-import { TimeSeriesController } from "@swim/widget";
+import { TimeSeriesController } from "@nstream/widget";
 import { RoomStatus } from "../types";
-import { Status } from "@swim/domain";
+import { Status } from "@nstream/domain";
 
 /** @public */
 export class RoomController extends TimeSeriesController {

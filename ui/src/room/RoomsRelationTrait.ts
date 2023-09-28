@@ -3,7 +3,7 @@
 
 import { type Value } from "@swim/structure";
 import { MapDownlink } from "@swim/client";
-import { RelationTrait } from "@swim/domain";
+import { RelationTrait } from "@nstream/domain";
 import { RoomEntityTrait } from "./RoomEntityTrait";
 import { Numbers, Observes, Strings } from "@swim/util";
 import { TraitModelSet } from "@swim/model";
