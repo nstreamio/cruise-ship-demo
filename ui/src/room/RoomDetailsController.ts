@@ -1,21 +1,32 @@
 // Copyright 2015-2022 Swim.inc
 // All rights reserved.
 
-import { PanelView } from "@swim/panel";
 import { TimeTableController } from "@nstream/widget";
 import { View, ViewRef } from "@swim/view";
 import { ValueDownlink } from "@swim/client";
 import { Value } from "@swim/structure";
-import { TraitViewRef } from "@swim/controller";
-import { Trait } from "@swim/model";
 import { HtmlView } from "@swim/dom";
 import { Property } from "@swim/component";
+import { Uri } from "@swim/uri";
 
 /** @public */
 export class RoomDetailsController extends TimeTableController {
   constructor() {
     super();
     this.initView();
+
+    const query = window.location.search;
+    const urlParams = new URLSearchParams(query);
+    let host = urlParams.get("host");
+    const baseUri = Uri.parse(document.location.href);
+    if (!host) {
+      host = baseUri
+        .base()
+        .withScheme(baseUri.schemeName === "https" ? "warps" : "warp")
+        .toString();
+    }
+
+    this.infoDownlink.setHostUri(host);
   }
 
   initView() {
@@ -122,7 +133,6 @@ export class RoomDetailsController extends TimeTableController {
   readonly hvacZone!: Property<this, String>;
 
   @ValueDownlink({
-    hostUri: "warp://localhost:9001",
     laneUri: "info",
     consumed: true,
     didSet(value: Value): void {

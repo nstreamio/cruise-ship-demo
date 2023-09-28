@@ -47,9 +47,19 @@ if (navigator.standalone) {
 //  1) An 'aspect' trait named 'portal' - indicating the agent will have a board of widgets/cards
 //  2) A 'relation' trait named 'decksRelation' - indicating the agent will have navigation to a list of deck agents
 // We also set the host + node uri of the entity 
+const query = window.location.search;
+console.log('query: ', query);
+const urlParams = new URLSearchParams(query);
+let host = urlParams.get("host");
+console.log('host: ', host);
+const baseUri = swim.Uri.parse(document.location.href);
+if (!host) {
+  host = baseUri.base().withScheme(baseUri.schemeName === "https" ? "warps" : "warp").toString();
+}
+
 const shipModel = new swim.Model();
 const ShipEntityTrait = shipModel.appendTrait(swim.royalcaribbeandemo.ShipEntityTrait, "entity");
-ShipEntityTrait.hostUri.set("warp://localhost:9001");
+ShipEntityTrait.hostUri.set(host);
 ShipEntityTrait.nodeUri.set("/ship/icon");
 shipModel.appendTrait(swim.SelectableTrait, "selectable");
 shipModel.mount();
@@ -59,7 +69,7 @@ ShipEntityTrait.decksRelation.insertModel();
 
 
 const entityFolioController = new nstream.EntityFolioController();
-entityFolioController.hostUri.set("warp://localhost:9001");
+entityFolioController.hostUri.set(host);
 
 entityFolioController.folio.attachView().style.set({
   flexGrow: 1,
