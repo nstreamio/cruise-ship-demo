@@ -1,7 +1,6 @@
 package com.rccl.examples.monitoring.agent;
 
 import swim.api.SwimLane;
-import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
 import swim.api.lane.ValueLane;
 

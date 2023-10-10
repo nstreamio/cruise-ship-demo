@@ -1,6 +1,5 @@
 package com.rccl.examples.monitoring;
 
-import com.rccl.examples.monitoring.agent.DeckAgent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swim.kernel.Kernel;

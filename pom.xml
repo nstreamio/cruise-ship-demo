@@ -7,7 +7,7 @@
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <swimos.version>4.0.1</swimos.version>
+        <swimos.version>4.1.0.12</swimos.version>
         <slf4j.version>2.0.7</slf4j.version>
     </properties>
 

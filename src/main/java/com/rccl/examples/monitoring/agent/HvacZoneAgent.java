@@ -3,7 +3,6 @@ package com.rccl.examples.monitoring.agent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
-import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
 import swim.api.lane.ValueLane;
 import swim.structure.Record;

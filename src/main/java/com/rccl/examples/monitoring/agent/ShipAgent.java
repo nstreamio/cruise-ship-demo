@@ -1,18 +1,14 @@
 package com.rccl.examples.monitoring.agent;
 
 import com.rccl.examples.monitoring.ResourceUtils;
-import com.rccl.examples.monitoring.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
-import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
 import swim.api.lane.JoinValueLane;
 import swim.api.lane.ValueLane;
-import swim.concurrent.Cont;
 import swim.structure.Record;
 import swim.structure.Value;
-import swim.warp.CommandMessage;
 
 import static com.rccl.examples.monitoring.Utils.logCommand;
 

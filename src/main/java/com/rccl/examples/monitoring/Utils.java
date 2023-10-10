@@ -5,15 +5,12 @@ import org.slf4j.Logger;
 import swim.api.agent.AbstractAgent;
 import swim.concurrent.Cont;
 import swim.structure.Value;
-import swim.uri.Uri;
-import swim.uri.UriPart;
-import swim.uri.UriPath;
 import swim.warp.CommandMessage;
 
 
 public class Utils {
   public static Cont<CommandMessage> logCommand(Logger log) {
-    return new Cont<CommandMessage>() {
+    return new Cont<>() {
       @Override
       public void bind(CommandMessage commandMessage) {
         log.trace(
