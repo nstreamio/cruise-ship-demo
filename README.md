@@ -14,6 +14,12 @@ Simulate an empty room.
 curl -X POST 'http://localhost:9001/ship/icon/deck/3/room/3421?lane=simulate&action=leaveroom'
 ```
 
+Simulate a badge out.
+```bash
+curl -X POST 'http://localhost:9001/ship/icon/deck/3/room/3421?lane=simulate&action=badgeOut'
+```
+
+
 To edit the UI, make your changes within the `/ui` directory and run
 
 ```bash

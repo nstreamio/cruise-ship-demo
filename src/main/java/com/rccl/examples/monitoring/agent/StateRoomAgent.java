@@ -1,5 +1,6 @@
 package com.rccl.examples.monitoring.agent;
 
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
@@ -21,6 +22,7 @@ import static com.rccl.examples.monitoring.Utils.logCommand;
 
 public class StateRoomAgent extends RCCLAbstractAgent {
   private static final Logger log = LoggerFactory.getLogger(StateRoomAgent.class);
+  private static final Duration hvacAdjustDuration = Duration.ofMinutes(10);
 
   @SwimLane("info")
   ValueLane<Record> info = this.valueLane();
@@ -28,21 +30,37 @@ public class StateRoomAgent extends RCCLAbstractAgent {
   @SwimLane("status")
   final ValueLane<Value> status = this.valueLane();
 
+  boolean isExternallySimulated = false;
+
+  final boolean isRoomEven = getProp("roomNumber").intValue(1) % 2 == 0;
+
+  static final int INTERNAL_SIM_TIMER_INTERVAL = 10000;
+  /**
+   * Internal sim (ignored for externally simulated rooms)
+   *
+   * if room number is even then keep presence on by updating occupancyDetected time
+   */
+  final TimerRef internalSimTimer = this.setTimer(INTERNAL_SIM_TIMER_INTERVAL, () -> {
+    if (isExternallySimulated) {
+      return;
+    }
+    if (isRoomEven) {
+      this.status.set(this.status.get().updatedSlot("occupancyDetected", System.currentTimeMillis()));
+    }
+    // Reschedule the simulation timer to execute again at a random time
+    // between 0 and 30 seconds from now.
+    this.internalSimTimer.reschedule(Math.round(30000L * Math.random()));
+  });
 
   /**
    * This timer looks at the values for when the occupancy was last detected. If the last time
-   * we have detected someone in the room is more than 2 hours ago, alter the HVAC to the ECO
+   * we have detected someone in the room is more than <code>hvacAdjustDuration</code> ago, alter the HVAC to the ECO
    * setting of 78.
    */
   static final int OCCUPANCY_TIMER_INTERVAL = 1000;
   final TimerRef occupancyTimer = this.setTimer(OCCUPANCY_TIMER_INTERVAL, () -> {
-
-
-
     try {
-      if (!this.status.get().isDefined()) {
-        return;
-      }
+
       Value lastOccupancyDetectedValue = this.status.get().getSlot("occupancyDetected");
 
       if(!lastOccupancyDetectedValue.isDefined()) {
@@ -55,7 +73,6 @@ public class StateRoomAgent extends RCCLAbstractAgent {
       long lastOccupancyDetected = lastOccupancyDetectedValue.longValue();
       long durationMs = System.currentTimeMillis() - lastOccupancyDetected;
       Duration duration = Duration.ofMillis(durationMs);
-      final Duration hvacAdjustDuration = Duration.ofHours(2);
 
       boolean ecoModeEnabled = this.status.get().getSlot("ecoModeEnabled").booleanValue(false);
       if (!ecoModeEnabled && duration.compareTo(hvacAdjustDuration) > 0) {
@@ -70,7 +87,8 @@ public class StateRoomAgent extends RCCLAbstractAgent {
         command(hvacZoneUri, "adjustTemperature", payload);
         Value status = this.status.get()
             .updatedSlot("ecoModeEnabled", true)
-            .updatedSlot("hvacTemperature", 78);
+            .updatedSlot("hvacTemperature", 78)
+            .updatedSlot("ecoModeTime", System.currentTimeMillis());
         this.status.set(status);
       }
     } finally {
@@ -102,7 +120,8 @@ public class StateRoomAgent extends RCCLAbstractAgent {
         if (HttpMethod.POST == request.method()) {
           String action = request.uri().query().get("action");
           if ("leaveroom".equals(action)) {
-            long occupancyTime = System.currentTimeMillis() - Duration.ofHours(3).toMillis();
+            this.isExternallySimulated = true;
+            long occupancyTime = System.currentTimeMillis() - Duration.ofMinutes(hvacAdjustDuration.toMinutes() * 2).toMillis();
 
             Value status = this.status.get()
                 .updatedSlot("occupancyDetected", occupancyTime)
@@ -110,6 +129,9 @@ public class StateRoomAgent extends RCCLAbstractAgent {
             this.status.set(status);
 
             response = HttpResponse.create(HttpStatus.OK).body(String.format("Adjusting occupancyDetected to %s", new Date(occupancyTime)));
+          } else if ("badgeOut".equals(action))  {
+            processBadgeOut();
+            response = HttpResponse.create(HttpStatus.OK).body("Processed badge out");
           } else {
             response = HttpResponse.create(HttpStatus.BAD_REQUEST).body(String.format("Unknown action %s\n", action));
           }
@@ -120,11 +142,16 @@ public class StateRoomAgent extends RCCLAbstractAgent {
       });
 
 
-  @SwimLane("processOpcUaTag")
-  final CommandLane<Record> processOpcUaTag = this.<Record>commandLane()
+  @SwimLane("badgeOut")
+  final CommandLane<Record> badgeOut = this.<Record>commandLane()
       .onCommand(input -> {
-
+        processBadgeOut();
       });
+
+  private void processBadgeOut() {
+    this.isExternallySimulated = true;
+    this.status.set(this.status.get().updatedSlot("badgeOut",  true));
+  }
 
   @SwimLane("init")
   final CommandLane<Record> init = this.<Record>commandLane()
