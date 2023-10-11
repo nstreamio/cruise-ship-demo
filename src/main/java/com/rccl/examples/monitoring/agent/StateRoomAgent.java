@@ -27,6 +27,9 @@ public class StateRoomAgent extends RCCLAbstractAgent {
   @SwimLane("info")
   ValueLane<Record> info = this.valueLane();
 
+  @SwimLane("ecoModeDuration")
+  ValueLane<Long> ecoModeDuration = this.valueLane();
+
   @SwimLane("status")
   final ValueLane<Value> status = this.valueLane();
 
@@ -63,7 +66,7 @@ public class StateRoomAgent extends RCCLAbstractAgent {
 
       Value lastOccupancyDetectedValue = this.status.get().getSlot("occupancyDetected");
 
-      if(!lastOccupancyDetectedValue.isDefined()) {
+      if (!lastOccupancyDetectedValue.isDefined()) {
         Value status = this.status.get()
             .updatedSlot("occupancyDetected", System.currentTimeMillis());
         this.status.set(status);
@@ -85,11 +88,21 @@ public class StateRoomAgent extends RCCLAbstractAgent {
         Value payload = Record.create()
             .slot("temperature", 78);
         command(hvacZoneUri, "adjustTemperature", payload);
-        Value status = this.status.get()
+        final Value status = this.status.get()
             .updatedSlot("ecoModeEnabled", true)
             .updatedSlot("hvacTemperature", 78)
-            .updatedSlot("ecoModeTime", System.currentTimeMillis());
+            .updatedSlot("ecoModeTimeSet", System.currentTimeMillis());
         this.status.set(status);
+      } else if (ecoModeEnabled) {
+        // bump the ecoModeDuration by 1 since the timer is rescheduled every second
+        final long ecoModeDurationVal = this.ecoModeDuration.get() + 1;
+        this.ecoModeDuration.set(ecoModeDurationVal);
+
+        // compute cost every 6 minutes (360 sec), assuming 10 cents saving every 6 minutes (based on $1/hr)
+        if (ecoModeDurationVal % 360 == 0) {
+          this.status.set(this.status.get().updatedSlot("savings", (ecoModeDurationVal / 360.0) * 0.1));
+        }
+
       }
     } finally {
       this.occupancyTimer.reschedule(OCCUPANCY_TIMER_INTERVAL);
