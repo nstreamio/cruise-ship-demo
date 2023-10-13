@@ -2,16 +2,16 @@
 // All rights reserved.
 
 import { Property } from "@swim/component";
-import { Form, Value } from "@swim/structure";
-import { MapDownlink } from "@swim/client";
+import { Value } from "@swim/structure";
 import { Feel, Look } from "@swim/theme";
 import type { View } from "@swim/view";
 import { ViewRef } from "@swim/view";
-import { CellView, LeafView } from "@swim/table";
+import { CellView } from "@swim/table";
 import { TextCellView } from "@swim/table";
 import { TimeSeriesController } from "@nstream/widget";
 import { RoomStatus } from "../types";
 import { Status } from "@nstream/domain";
+import { ValueDownlink } from "@swim/client";
 
 /** @public */
 export class RoomController extends TimeSeriesController {
@@ -22,12 +22,36 @@ export class RoomController extends TimeSeriesController {
   constructor(nodeUri: string, ecoMode: boolean) {
     super();
     this.setKey(nodeUri);
+    console.log("nodeUri: ", nodeUri);
+    this.nodeUri.setValue(nodeUri);
+
     const regexResult = /\/ship\/\w+\/deck\/(\d+)\/room\/(\d+)/.exec(
       nodeUri
     ) ?? [null, "", ""];
     this.deckNumber = regexResult[1];
     this.roomNumber = regexResult[2];
     this.ecoMode = ecoMode;
+  }
+
+  protected override onMount(): void {
+    // set content and mood of deckCell
+    (this.deckCell.insertView() as TextCellView).set({
+      content: this.deckNumber,
+      classList: ["deck-cell-view"],
+    });
+
+    // set content and mood of roomCell
+    (this.roomCell.insertView() as TextCellView).set({
+      content: this.roomNumber,
+      classList: ["room-cell-view"],
+    });
+
+    this.hvacTempCell.insertView();
+    this.timeSinceOccupiedCell.insertView();
+
+    this.updateCellsMood();
+
+    this.statusDownlink.open();
   }
 
   @ViewRef({
@@ -94,77 +118,68 @@ export class RoomController extends TimeSeriesController {
   })
   readonly timeSinceOccupiedCell!: ViewRef<this, CellView>;
 
-  @Property({
-    valueType: Value,
-    value: Value.absent(),
-    didSetValue(value: Value): void {
-      let moodStatus = RoomController.RoomStatusMood.get(
-        this.owner.ecoMode ? RoomStatus.ecoMode : RoomStatus.recentlyOccupied
-      );
+  @ValueDownlink({
+    laneUri: "status",
+    inherits: true,
+    consumed: true,
+    didSet(value: Value) {
+      // @event(node:"/ship/icon/deck/3/room/3150",lane:status){ecoModeEnabled:false,occupancyDetected:1697148785053,hvacTemperature:71,roomTemperature:71}
+      const ecoModeEnabled = value.get("ecoModeEnabled").booleanValue();
+      const occupancyDetected = value.get("occupancyDetected").numberValue(0);
+      const hvacTemp = value.get("hvacTemperature").numberValue(0);
+      const roomTemp = value.get("roomTemperature").numberValue();
 
-      // update content and mood of deckCell
-      const deckCellView = this.owner.deckCell.view as TextCellView | null;
-      if (deckCellView !== null) {
-        deckCellView.set({
-          content: this.owner.deckNumber,
-          classList: ["deck-cell-view"],
-        });
-        deckCellView.modifyMood(Feel.default, moodStatus!.moodModifier);
-      }
-
-      // update content and mood of roomCell
-      const roomCellView = this.owner.roomCell.view as TextCellView | null;
-      if (roomCellView !== null) {
-        roomCellView.set({
-          content: this.owner.roomNumber,
-          classList: ["room-cell-view"],
-        });
-        roomCellView.modifyMood(Feel.default, moodStatus!.moodModifier);
-      }
-
-      // update content and mood of hvacTempCell
-      const hvacTempCellView = this.owner.hvacTempCell
-        .view as TextCellView | null;
-      if (hvacTempCellView !== null) {
-        const hvacTempValue = value.get("hvacTemperature").numberValue(0);
-        hvacTempCellView.set({
-          content: hvacTempValue.toString(),
-          classList: ["hvac-temp-cell-view"],
-        });
-        hvacTempCellView.modifyMood(Feel.default, moodStatus!.moodModifier);
-      }
+      (this.owner.hvacTempCell.attachView() as TextCellView).set({
+        content: hvacTemp.toString(),
+        classList: ["hvac-temp-cell-view"],
+      });
 
       // update content and mood of timeSinceOccupiedCell
-      const timeSinceOccupiedCellView = this.owner.timeSinceOccupiedCell
-        .view as TextCellView | null;
-      if (timeSinceOccupiedCellView !== null) {
-        const msSinceOccupied =
-          Date.now() - value.get("occupancyDetected").numberValue(0);
-        const hoursSinceOccupied = Math.floor(msSinceOccupied / 1000 / 60 / 60);
-        const minutesSinceOccupied = Math.floor(
-          (msSinceOccupied / 1000 / 60) % 60
-        );
-        const secondsSinceOccupied = Math.floor((msSinceOccupied / 1000) % 60);
-        let content: string;
-        if (hoursSinceOccupied) {
-          content = `${hoursSinceOccupied}h ${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
-        } else if (minutesSinceOccupied) {
-          content = `${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
-        } else {
-          content = `${secondsSinceOccupied}s`;
-        }
-        timeSinceOccupiedCellView.set({
-          content,
-          classList: ["time-in-processing-cell-view"],
-        });
-        timeSinceOccupiedCellView.modifyMood(
-          Feel.default,
-          moodStatus!.moodModifier
-        );
+      const msSinceOccupied = Date.now() - occupancyDetected;
+      const hoursSinceOccupied = Math.floor(msSinceOccupied / 1000 / 60 / 60);
+      const minutesSinceOccupied = Math.floor(
+        (msSinceOccupied / 1000 / 60) % 60
+      );
+      const secondsSinceOccupied = Math.floor((msSinceOccupied / 1000) % 60);
+      let content: string;
+      if (hoursSinceOccupied) {
+        content = `${hoursSinceOccupied}h ${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
+      } else if (minutesSinceOccupied) {
+        content = `${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
+      } else {
+        content = `${secondsSinceOccupied}s`;
       }
+      (this.owner.timeSinceOccupiedCell.attachView() as TextCellView).set({
+        content,
+        classList: ["time-in-processing-cell-view"],
+      });
+
+      this.owner.updateCellsMood();
     },
   })
-  readonly stats!: Property<this, Value>;
+  readonly statusDownlink!: ValueDownlink<this>;
+
+  private updateCellsMood() {
+    let moodStatus = RoomController.RoomStatusMood.get(
+      this.ecoMode ? RoomStatus.ecoMode : RoomStatus.recentlyOccupied
+    );
+
+    this.deckCell
+      .attachView()
+      .modifyMood(Feel.default, moodStatus!.moodModifier);
+
+    this.roomCell
+      .attachView()
+      .modifyMood(Feel.default, moodStatus!.moodModifier);
+
+    this.hvacTempCell
+      .attachView()
+      .modifyMood(Feel.default, moodStatus!.moodModifier);
+
+    this.timeSinceOccupiedCell
+      .attachView()
+      .modifyMood(Feel.default, moodStatus!.moodModifier);
+  }
 
   private static RoomStatusMood: Map<RoomStatus, Status> = new Map<
     RoomStatus,
@@ -172,7 +187,5 @@ export class RoomController extends TimeSeriesController {
   >([
     [RoomStatus.recentlyOccupied, Status.improving(0, 1, 2, 3, 4)(1.4)],
     [RoomStatus.ecoMode, Status.improving(0, 1, 2, 3, 4)(3)],
-    //   [RoomStatus.readyForPickup, Status.improving(0, 1, 2, 3, 4)(3)],
-    //   [RoomStatus.pickupCompleted, Status.unknown()],
   ]);
 }

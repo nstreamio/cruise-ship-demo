@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Royal Caribbean PoC</title>
+    <title>Royal Caribbean Demo</title>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -48,10 +48,8 @@ if (navigator.standalone) {
 //  2) A 'relation' trait named 'decksRelation' - indicating the agent will have navigation to a list of deck agents
 // We also set the host + node uri of the entity 
 const query = window.location.search;
-console.log('query: ', query);
 const urlParams = new URLSearchParams(query);
 let host = urlParams.get("host");
-console.log('host: ', host);
 const baseUri = swim.Uri.parse(document.location.href);
 if (!host) {
   host = baseUri.base().withScheme(baseUri.schemeName === "https" ? "warps" : "warp").toString();

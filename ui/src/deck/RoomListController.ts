@@ -4,7 +4,7 @@
 import { PanelView } from "@swim/panel";
 import { TimeTableController } from "@nstream/widget";
 import { View, ViewRef } from "@swim/view";
-import { MapDownlink, ValueDownlink } from "@swim/client";
+import { MapDownlink } from "@swim/client";
 import { Value } from "@swim/structure";
 import { TraitViewRef } from "@swim/controller";
 import { Trait } from "@swim/model";
@@ -207,9 +207,6 @@ export class RoomListController extends TimeTableController {
         roomController.roomCell.insertView();
         roomController.hvacTempCell.insertView();
         roomController.timeSinceOccupiedCell.insertView();
-
-        // call .stats() method on controller to populate cells
-        roomController.stats.set(value);
 
         // add newly created controller this this.series ControllerSet
         this.owner.series.addController(roomController, null, nodeUri.pathName);

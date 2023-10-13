@@ -6,11 +6,7 @@ import { TraitViewRef } from "@swim/controller";
 import { PanelView, BoardView, BoardController } from "@swim/panel";
 import { EntityTrait } from "@nstream/domain";
 import { View, ViewRef } from "@swim/view";
-import { HtmlView } from "@swim/dom";
-import { ValueDownlink } from "@swim/client";
-import { Value } from "@swim/structure";
 import { RoomDetailsController } from "./RoomDetailsController";
-import { RoomListController } from "../deck/RoomListController";
 
 /** @public */
 export class RoomBoardController extends BoardController {
