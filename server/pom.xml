@@ -66,6 +66,10 @@
                     </from>
                     <to>
                         <image>nstream/demo-rccl-hvac:${version}</image>
+                        <auth>
+                            <username>${env.REGISTRY_USERNAME}</username>
+                            <password>${env.REGISTRY_PASSWORD}</password>
+                        </auth>
                     </to>
                     <container>
                         <mainClass>com.rccl.examples.monitoring.EntryPoint</mainClass>
