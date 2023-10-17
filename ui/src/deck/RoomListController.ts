@@ -6,7 +6,7 @@ import { TimeTableController } from "@nstream/widget";
 import { View, ViewRef } from "@swim/view";
 import { MapDownlink } from "@swim/client";
 import { Value } from "@swim/structure";
-import { TraitViewRef } from "@swim/controller";
+import { ControllerSet, TraitViewRef } from "@swim/controller";
 import { Trait } from "@swim/model";
 import { ColView, HeaderView, TextColView } from "@swim/table";
 import { ColLayout, TableLayout, TableView } from "@swim/table";
@@ -173,6 +173,17 @@ export class RoomListController extends TimeTableController {
     },
   })
   readonly timeInProcessingCol!: ViewRef<this, ColView>;
+
+  @ControllerSet({
+    sorted: true,
+    extends: true,
+    controllerType: RoomController,
+    compare(a: RoomController, b: RoomController) {
+      return Number.parseInt(a.roomNumber) - Number.parseInt(b.roomNumber);
+    },
+  })
+  override readonly series!: ControllerSet<this, RoomController> &
+    TimeTableController["series"];
 
   @MapDownlink({
     laneUri: "stateRooms",

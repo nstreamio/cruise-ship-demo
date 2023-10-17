@@ -12,6 +12,7 @@ import { TimeSeriesController } from "@nstream/widget";
 import { RoomStatus } from "../types";
 import { Status } from "@nstream/domain";
 import { ValueDownlink } from "@swim/client";
+import { OCC_DETECTED_THRESHOLD } from "../constants";
 
 /** @public */
 export class RoomController extends TimeSeriesController {
@@ -153,38 +154,48 @@ export class RoomController extends TimeSeriesController {
         classList: ["time-in-processing-cell-view"],
       });
 
-      this.owner.updateCellsMood();
+      this.owner.updateCellsMood(occupancyDetected);
     },
   })
   readonly statusDownlink!: ValueDownlink<this>;
 
-  private updateCellsMood() {
-    let moodStatus = RoomController.RoomStatusMood.get(
-      this.ecoMode ? RoomStatus.ecoMode : RoomStatus.recentlyOccupied
-    );
+  private updateCellsMood(occupancyDetected: number = Date.now().valueOf()) {
+    const cells = [
+      this.deckCell.attachView(),
+      this.roomCell.attachView(),
+      this.hvacTempCell.attachView(),
+      this.timeSinceOccupiedCell.attachView(),
+    ];
 
-    this.deckCell
-      .attachView()
-      .modifyMood(Feel.default, moodStatus!.moodModifier);
+    if (!this.ecoMode) {
+      const portionToThreshold =
+        (Date.now().valueOf() - occupancyDetected) / OCC_DETECTED_THRESHOLD;
+      let moodStatus = Status.improving(
+        0,
+        1,
+        2,
+        3,
+        4
+      )(portionToThreshold * 1.1 + 1);
 
-    this.roomCell
-      .attachView()
-      .modifyMood(Feel.default, moodStatus!.moodModifier);
-
-    this.hvacTempCell
-      .attachView()
-      .modifyMood(Feel.default, moodStatus!.moodModifier);
-
-    this.timeSinceOccupiedCell
-      .attachView()
-      .modifyMood(Feel.default, moodStatus!.moodModifier);
+      cells.forEach((c) => {
+        c.set({ classList: [] }).modifyMood(
+          Feel.default,
+          moodStatus!.moodModifier
+        );
+      });
+    } else {
+      cells.forEach((c) => {
+        c.set({ classList: ["ecoModeEnabled"] });
+      });
+    }
   }
 
   private static RoomStatusMood: Map<RoomStatus, Status> = new Map<
     RoomStatus,
     Status
   >([
-    [RoomStatus.recentlyOccupied, Status.improving(0, 1, 2, 3, 4)(1.4)],
+    [RoomStatus.recentlyOccupied, Status.improving(0, 1, 2, 3, 4)(2)],
     [RoomStatus.ecoMode, Status.improving(0, 1, 2, 3, 4)(3)],
   ]);
 }
