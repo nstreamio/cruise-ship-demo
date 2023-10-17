@@ -19,6 +19,7 @@ export class RoomController extends TimeSeriesController {
   readonly deckNumber: string;
   readonly roomNumber: string;
   readonly ecoMode: boolean = true;
+  intervalId: number | null = null;
 
   constructor(nodeUri: string, ecoMode: boolean) {
     super();
@@ -31,6 +32,13 @@ export class RoomController extends TimeSeriesController {
     this.deckNumber = regexResult[1];
     this.roomNumber = regexResult[2];
     this.ecoMode = ecoMode;
+  }
+
+  protected override willUnmount(): void {
+    if (this.intervalId) {
+      window.clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   }
 
   protected override onMount(): void {
@@ -122,42 +130,61 @@ export class RoomController extends TimeSeriesController {
     laneUri: "status",
     inherits: true,
     consumed: true,
+    didLink() {
+      this.owner.intervalId = window.setInterval(() => {
+        if (this.opened && this?.get?.()) {
+          this.owner.updateCellsContent(
+            this.get().get("occupancyDetected").numberValue(0),
+            this.get().get("hvacTemperature").numberValue(0)
+          );
+        }
+      }, Math.random() * 20 * 1000 + 20 * 1000); // random interval between 20 and 40 seconds
+    },
+    didUnlink() {
+      if (this.owner.intervalId) {
+        window.clearInterval(this.owner.intervalId);
+        this.owner.intervalId = null;
+      }
+    },
     didSet(value: Value) {
       // @event(node:"/ship/icon/deck/3/room/3150",lane:status){ecoModeEnabled:false,occupancyDetected:1697148785053,hvacTemperature:71,roomTemperature:71}
-      const ecoModeEnabled = value.get("ecoModeEnabled").booleanValue();
       const occupancyDetected = value.get("occupancyDetected").numberValue(0);
       const hvacTemp = value.get("hvacTemperature").numberValue(0);
-      const roomTemp = value.get("roomTemperature").numberValue();
 
-      (this.owner.hvacTempCell.attachView() as TextCellView).set({
-        content: hvacTemp.toString(),
-        classList: ["hvac-temp-cell-view"],
-      });
-
-      // update content and mood of timeSinceOccupiedCell
-      const msSinceOccupied = Date.now() - occupancyDetected;
-      const hoursSinceOccupied = Math.floor(msSinceOccupied / 1000 / 60 / 60);
-      const minutesSinceOccupied = Math.floor(
-        (msSinceOccupied / 1000 / 60) % 60
-      );
-      const secondsSinceOccupied = Math.floor((msSinceOccupied / 1000) % 60);
-      let content: string;
-      if (hoursSinceOccupied) {
-        content = `${hoursSinceOccupied}h ${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
-      } else if (minutesSinceOccupied) {
-        content = `${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
-      } else {
-        content = `${secondsSinceOccupied}s`;
-      }
-      (this.owner.timeSinceOccupiedCell.attachView() as TextCellView).set({
-        content,
-        classList: ["time-in-processing-cell-view"],
-      });
-
-      this.owner.updateCellsMood(occupancyDetected);
+      this.owner.updateCellsContent(occupancyDetected, hvacTemp);
     },
   })
   readonly statusDownlink!: ValueDownlink<this>;
+
+  private updateCellsContent(
+    occupancyDetected: number,
+    hvacTemp: number
+  ): void {
+    (this.hvacTempCell.attachView() as TextCellView).set({
+      content: hvacTemp.toString(),
+      classList: ["hvac-temp-cell-view"],
+    });
+
+    // update content and mood of timeSinceOccupiedCell
+    const msSinceOccupied = Date.now() - occupancyDetected;
+    const hoursSinceOccupied = Math.floor(msSinceOccupied / 1000 / 60 / 60);
+    const minutesSinceOccupied = Math.floor((msSinceOccupied / 1000 / 60) % 60);
+    const secondsSinceOccupied = Math.floor((msSinceOccupied / 1000) % 60);
+    let content: string;
+    if (hoursSinceOccupied) {
+      content = `${hoursSinceOccupied}h ${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
+    } else if (minutesSinceOccupied) {
+      content = `${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
+    } else {
+      content = `${secondsSinceOccupied}s`;
+    }
+    (this.timeSinceOccupiedCell.attachView() as TextCellView).set({
+      content,
+      classList: ["time-in-processing-cell-view"],
+    });
+
+    this.updateCellsMood(occupancyDetected);
+  }
 
   private updateCellsMood(occupancyDetected: number = Date.now().valueOf()) {
     const cells = [
@@ -190,12 +217,4 @@ export class RoomController extends TimeSeriesController {
       });
     }
   }
-
-  private static RoomStatusMood: Map<RoomStatus, Status> = new Map<
-    RoomStatus,
-    Status
-  >([
-    [RoomStatus.recentlyOccupied, Status.improving(0, 1, 2, 3, 4)(2)],
-    [RoomStatus.ecoMode, Status.improving(0, 1, 2, 3, 4)(3)],
-  ]);
 }
