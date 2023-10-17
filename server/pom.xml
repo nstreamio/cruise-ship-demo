@@ -56,7 +56,37 @@
 
     <build>
         <plugins>
-
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <from>
+                        <image>openjdk:11</image>
+                    </from>
+                    <to>
+                        <image>nstream/demo-rccl-hvac:${version}</image>
+                    </to>
+                    <container>
+                        <mainClass>com.rccl.examples.monitoring.EntryPoint</mainClass>
+                        <ports>
+                            <port>9001/tcp</port>
+                        </ports>
+                        <jvmFlags>-Dswim.config=/config/server.recon</jvmFlags>
+                    </container>
+                    <extraDirectories>
+                        <paths>
+                            <path>
+                                <from>src/main/resources</from>
+                                <into>/config</into>
+                                <includes>
+                                    <include>*.recon</include>
+                                </includes>
+                            </path>
+                        </paths>
+                    </extraDirectories>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
