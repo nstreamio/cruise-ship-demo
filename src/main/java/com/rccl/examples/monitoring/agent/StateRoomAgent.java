@@ -22,7 +22,7 @@ import static com.rccl.examples.monitoring.Utils.logCommand;
 
 public class StateRoomAgent extends RCCLAbstractAgent {
   private static final Logger log = LoggerFactory.getLogger(StateRoomAgent.class);
-  private static final Duration hvacAdjustDuration = Duration.ofMinutes(10);
+  private static final Duration hvacAdjustDuration = Duration.ofMinutes(10); // must update alongside OCC_DETECTED_THRESHOLD in constants.ts
 
   @SwimLane("info")
   ValueLane<Record> info = this.valueLane();
@@ -47,8 +47,13 @@ public class StateRoomAgent extends RCCLAbstractAgent {
     if (isExternallySimulated) {
       return;
     }
-    if (isRoomEven) {
-      this.status.set(this.status.get().updatedSlot("occupancyDetected", System.currentTimeMillis()));
+    if (isRoomEven && Math.random() > 0.96) {
+      this.status.set(
+        this.status.get()
+          .updatedSlot("occupancyDetected", System.currentTimeMillis())
+          .updatedSlot("ecoModeEnabled", false)
+          .updatedSlot("hvacTemperature", 71)
+      );
     }
     // Reschedule the simulation timer to execute again at a random time
     // between 0 and 30 seconds from now.
@@ -119,7 +124,7 @@ public class StateRoomAgent extends RCCLAbstractAgent {
     this.status.set(
         Record.of()
             .slot("ecoModeEnabled", false)
-            .slot("occupancyDetected", System.currentTimeMillis())
+            .slot("occupancyDetected", System.currentTimeMillis() - (hvacAdjustDuration.toMillis() * (isRoomEven ? Math.random() : 1)))
             .slot("hvacTemperature", 71)
             .slot("roomTemperature", 71)
 
