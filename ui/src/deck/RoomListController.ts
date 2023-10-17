@@ -217,6 +217,9 @@ export class RoomListController extends TimeTableController {
         roomController !== null &&
         this.owner.listEcoMode !== ecoModeEnabled
       ) {
+        // if (/7465/.test(nodeUri.toString())) {
+        //   console.log("inside second if block");
+        // }
         this.owner.removeChild(nodeUri.pathName);
       }
     },

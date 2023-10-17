@@ -22,7 +22,6 @@ export class RoomController extends TimeSeriesController {
   constructor(nodeUri: string, ecoMode: boolean) {
     super();
     this.setKey(nodeUri);
-    console.log("nodeUri: ", nodeUri);
     this.nodeUri.setValue(nodeUri);
 
     const regexResult = /\/ship\/\w+\/deck\/(\d+)\/room\/(\d+)/.exec(
