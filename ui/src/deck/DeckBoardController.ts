@@ -7,11 +7,21 @@ import { PanelView, BoardView, BoardController } from "@swim/panel";
 import { EntityTrait } from "@nstream/domain";
 import { RoomListController } from "../room";
 import { RoomStatus } from "../types";
+import { DeckColumnController } from "./DeckColumnController";
+import { SavingsController } from "./SavingsController";
+import { Property } from "@swim/component";
 
 /** @public */
 export class DeckBoardController extends BoardController {
+  deckNumber: number;
+  initialRoomSavingsAccountedFor: Record<string, boolean> = {};
+
   constructor() {
     super();
+    this.deckNumber = Number.parseInt(
+      (/\/deck\/(\d+)/.exec(window.location.href) ?? [null, "3"])[1]
+    );
+
     this.initBoard();
   }
 
@@ -20,10 +30,6 @@ export class DeckBoardController extends BoardController {
     const rootPanelView = boardView.appendChild(PanelView).style.set({
       margin: 6,
     });
-
-    // The deck board consists of 2 panels of rooms (the same except they have different statuses)
-    // Each panel takes up the full height of the sheet and 1/2 of the width
-    // We insert each widget by inserting each controller's 'panel'
 
     const recentlyOccupiedListController = this.appendChild(
       new RoomListController(false),
@@ -38,18 +44,50 @@ export class DeckBoardController extends BoardController {
       headerTitle: "Recently Occupied Staterooms",
     });
 
-    const ecoModeListController = this.appendChild(
+    const ecoModeColumnController = this.appendChild(
+      new DeckColumnController()
+    );
+    const ecoModeColumnPanelView = ecoModeColumnController.panel
+      .insertView(rootPanelView)
+      .set({
+        unitWidth: 1 / 2,
+        unitHeight: 1,
+      });
+
+    const ecoModeListController = ecoModeColumnController.appendChild(
       new RoomListController(true),
       `List${RoomStatus.ecoMode}`
     );
-    ecoModeListController.panel.insertView(rootPanelView).set({
-      unitWidth: 1 / 2,
-      unitHeight: 1,
+    ecoModeListController.panel.insertView(ecoModeColumnPanelView).set({
+      unitWidth: 1,
+      unitHeight: 3 / 4,
+      headerTitle: "Staterooms in EcoMode",
+    });
+
+    const ecoModeSavingsController = ecoModeColumnController.appendChild(
+      new SavingsController(this.deckNumber),
+      `SavingsController`
+    );
+    ecoModeSavingsController.panel.insertView(ecoModeColumnPanelView).set({
+      unitWidth: 1,
+      unitHeight: 1 / 4,
       style: {
         margin: 6,
       },
-      headerTitle: "Staterooms in EcoMode",
+      headerTitle: "EcoMode Savings",
     });
+  }
+
+  @Property({
+    valueType: Number,
+    value: 0,
+  })
+  readonly deckSavings!: Property<this, number>;
+
+  incrementDeckSavings(num: number): void {
+    const currentValue = this.deckSavings.value;
+    const newValue = currentValue + num;
+    this.deckSavings.setValue(newValue);
   }
 
   @TraitViewRef({

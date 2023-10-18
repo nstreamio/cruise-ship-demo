@@ -1,6 +1,6 @@
 # rccl-hvac
 
-Run a local server.
+Run a local server. From within the `/server` directory, run:
 
 ```bash
 mvn compile exec:java -Dexec.mainClass="com.rccl.examples.monitoring.EntryPoint"
@@ -20,7 +20,7 @@ curl -X POST 'http://localhost:9001/ship/icon/deck/3/room/3421?lane=simulate&act
 ```
 
 
-To edit the UI, make your changes within the `/ui` directory and run
+To edit the UI, make your changes and from within the `/ui` directory, run:
 
 ```bash
 npm run build
