@@ -76,7 +76,7 @@
     "mkdir-ui": "mkdir -p dist/libs && mkdir -p dist/assets",
     "compile": "tsc -b",
     "bundle": "cd src/ && rollup -c && npm run copy-app",
-    "copy-app": "cp index.html dist/ && cp build/javascript/*.min.js* dist/libs && cp assets/* dist/assets",
+    "copy-app": "cp build/javascript/*.min.js* dist/libs && cp assets/* dist/assets",
     "build": "npm run compile && npm run bundle",
     "postinstall": "npm run mkdir-ui"
   }
