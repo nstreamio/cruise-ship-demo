@@ -204,9 +204,18 @@ export class RoomController extends TimeSeriesController {
 
     // update content and mood of timeSinceOccupiedCell
     const msSinceOccupied = Date.now() - occupancyDetected;
-    const hoursSinceOccupied = Math.floor(msSinceOccupied / 1000 / 60 / 60);
-    const minutesSinceOccupied = Math.floor((msSinceOccupied / 1000 / 60) % 60);
-    const secondsSinceOccupied = Math.floor((msSinceOccupied / 1000) % 60);
+    const hoursSinceOccupied = Math.max(
+      0,
+      Math.floor(msSinceOccupied / 1000 / 60 / 60)
+    );
+    const minutesSinceOccupied = Math.max(
+      0,
+      Math.floor((msSinceOccupied / 1000 / 60) % 60)
+    );
+    const secondsSinceOccupied = Math.max(
+      0,
+      Math.floor((msSinceOccupied / 1000) % 60)
+    );
     let content: string;
     if (hoursSinceOccupied) {
       content = `${hoursSinceOccupied}h ${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
