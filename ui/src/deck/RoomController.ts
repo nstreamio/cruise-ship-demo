@@ -9,10 +9,10 @@ import { ViewRef } from "@swim/view";
 import { CellView } from "@swim/table";
 import { TextCellView } from "@swim/table";
 import { TimeSeriesController } from "@nstream/widget";
-import { RoomStatus } from "../types";
 import { Status } from "@nstream/domain";
 import { ValueDownlink } from "@swim/client";
 import { OCC_DETECTED_THRESHOLD } from "../constants";
+import { DeckBoardController } from "./DeckBoardController";
 
 /** @public */
 export class RoomController extends TimeSeriesController {
@@ -21,16 +21,17 @@ export class RoomController extends TimeSeriesController {
   readonly ecoMode: boolean = true;
   intervalId: number | null = null;
 
-  constructor(nodeUri: string, ecoMode: boolean) {
+  constructor(
+    nodeUri: string,
+    deckNumber: string,
+    roomNumber: string,
+    ecoMode: boolean
+  ) {
     super();
     this.setKey(nodeUri);
     this.nodeUri.setValue(nodeUri);
-
-    const regexResult = /\/ship\/\w+\/deck\/(\d+)\/room\/(\d+)/.exec(
-      nodeUri
-    ) ?? [null, "", ""];
-    this.deckNumber = regexResult[1];
-    this.roomNumber = regexResult[2];
+    this.deckNumber = deckNumber;
+    this.roomNumber = roomNumber;
     this.ecoMode = ecoMode;
   }
 
@@ -61,6 +62,39 @@ export class RoomController extends TimeSeriesController {
 
     this.statusDownlink.open();
   }
+
+  @Property({
+    valueType: Number,
+    value: 0,
+    didSetValue(newValue: number = 0, oldValue: number = 0): void {
+      const deckBoardController = this.owner.getAncestor(DeckBoardController);
+      if (deckBoardController) {
+        if (
+          oldValue === 0 &&
+          deckBoardController.initialRoomSavingsAccountedFor[
+            this.owner.roomNumber
+          ] === true
+        ) {
+          return;
+        } else if (
+          oldValue === 0 &&
+          deckBoardController.initialRoomSavingsAccountedFor[
+            this.owner.roomNumber
+          ] === false
+        ) {
+          deckBoardController.incrementDeckSavings(newValue - oldValue);
+          deckBoardController.initialRoomSavingsAccountedFor[
+            this.owner.roomNumber
+          ] = true;
+        } else {
+          deckBoardController.incrementDeckSavings(newValue - oldValue);
+        }
+      } else {
+        console.log("NO DECKBOARDCONTROLLER FOUND!");
+      }
+    },
+  })
+  readonly roomSavings!: Property<this, number>;
 
   @ViewRef({
     viewType: CellView,
@@ -152,6 +186,9 @@ export class RoomController extends TimeSeriesController {
       const hvacTemp = value.get("hvacTemperature").numberValue(0);
 
       this.owner.updateCellsContent(occupancyDetected, hvacTemp);
+
+      const savings = value.get("savings").numberValue(0);
+      this.owner.roomSavings.setValue(savings);
     },
   })
   readonly statusDownlink!: ValueDownlink<this>;

@@ -14,6 +14,7 @@ import { Uri } from "@swim/uri";
 import { Length } from "@swim/math";
 import { Look } from "@swim/theme";
 import { RoomController } from "./RoomController";
+import { DeckBoardController } from "./DeckBoardController";
 
 /** @public */
 export class RoomListController extends TimeTableController {
@@ -200,9 +201,27 @@ export class RoomListController extends TimeTableController {
         roomController === null &&
         this.owner.listEcoMode === ecoModeEnabled
       ) {
+        const regexResult = /\/ship\/\w+\/deck\/(\d+)\/room\/(\d+)/.exec(
+          nodeUri.toString()
+        ) ?? [null, "", ""];
+        const deckNumber = regexResult[1];
+        const roomNumber = regexResult[2];
+
+        const deckBoardController = this.owner.getAncestor(DeckBoardController);
+        if (
+          deckBoardController &&
+          deckBoardController.initialRoomSavingsAccountedFor[roomNumber] ===
+            undefined
+        ) {
+          deckBoardController.initialRoomSavingsAccountedFor[roomNumber] =
+            false;
+        }
+
         // create new RoomController (row in list)
         roomController = new RoomController(
           nodeUri.toString(),
+          deckNumber,
+          roomNumber,
           this.owner.listEcoMode
         );
 
@@ -228,9 +247,6 @@ export class RoomListController extends TimeTableController {
         roomController !== null &&
         this.owner.listEcoMode !== ecoModeEnabled
       ) {
-        // if (/7465/.test(nodeUri.toString())) {
-        //   console.log("inside second if block");
-        // }
         this.owner.removeChild(nodeUri.pathName);
       }
     },
