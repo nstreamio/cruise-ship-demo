@@ -1,4 +1,5 @@
 @kernel(class: "swim.meta.MetaKernel")
+@kernel(class: "swim.service.web.UiRouter")
 
 tutorial: @fabric {
     @plane(class: "com.rccl.examples.monitoring.RCCLPlane")
