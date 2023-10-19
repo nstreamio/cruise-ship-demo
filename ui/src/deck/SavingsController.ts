@@ -22,7 +22,6 @@ export class SavingsController extends PanelController {
   }
 
   private getTimeText(num: number): string {
-    console.log("num: ", num);
     let hoursText = "";
     if (num >= 1) {
       hoursText = `${Math.floor(num)} hours`;

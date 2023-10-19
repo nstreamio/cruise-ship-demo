@@ -169,7 +169,8 @@ export class RoomController extends TimeSeriesController {
         if (this.opened && this?.get?.()) {
           this.owner.updateCellsContent(
             this.get().get("occupancyDetected").numberValue(0),
-            this.get().get("hvacTemperature").numberValue(0)
+            this.get().get("hvacTemperature").numberValue(0),
+            this.get().get("disembarked").booleanValue(false)
           );
         }
       }, Math.random() * 20 * 1000 + 20 * 1000); // random interval between 20 and 40 seconds
@@ -184,8 +185,9 @@ export class RoomController extends TimeSeriesController {
       // @event(node:"/ship/icon/deck/3/room/3150",lane:status){ecoModeEnabled:false,occupancyDetected:1697148785053,hvacTemperature:71,roomTemperature:71}
       const occupancyDetected = value.get("occupancyDetected").numberValue(0);
       const hvacTemp = value.get("hvacTemperature").numberValue(0);
+      const disembarked = value.get("disembarked").booleanValue(false);
 
-      this.owner.updateCellsContent(occupancyDetected, hvacTemp);
+      this.owner.updateCellsContent(occupancyDetected, hvacTemp, disembarked);
 
       const savings = value.get("savings").numberValue(0);
       this.owner.roomSavings.setValue(savings);
@@ -195,7 +197,8 @@ export class RoomController extends TimeSeriesController {
 
   private updateCellsContent(
     occupancyDetected: number,
-    hvacTemp: number
+    hvacTemp: number,
+    disembarked: boolean
   ): void {
     (this.hvacTempCell.attachView() as TextCellView).set({
       content: hvacTemp.toString(),
@@ -217,7 +220,9 @@ export class RoomController extends TimeSeriesController {
       Math.floor((msSinceOccupied / 1000) % 60)
     );
     let content: string;
-    if (hoursSinceOccupied) {
+    if (disembarked) {
+      content = "Disembarked";
+    } else if (hoursSinceOccupied) {
       content = `${hoursSinceOccupied}h ${minutesSinceOccupied}m ${secondsSinceOccupied}s`;
     } else if (minutesSinceOccupied) {
       content = `${minutesSinceOccupied}m ${secondsSinceOccupied}s`;

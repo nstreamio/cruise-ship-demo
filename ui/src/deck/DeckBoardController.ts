@@ -10,6 +10,8 @@ import { RoomStatus } from "../types";
 import { DeckColumnController } from "./DeckColumnController";
 import { SavingsController } from "./SavingsController";
 import { Property } from "@swim/component";
+import { BadgePanelController } from "./BadgePanelController";
+import { ColumnsPanelController } from "./ColumnsPanelController";
 
 /** @public */
 export class DeckBoardController extends BoardController {
@@ -31,11 +33,31 @@ export class DeckBoardController extends BoardController {
       margin: 6,
     });
 
+    const badgePanelController = this.appendChild(new BadgePanelController());
+    badgePanelController.panel.insertView(rootPanelView).set({
+      unitWidth: 1,
+      unitHeight: 1 / 16,
+      style: {
+        height: 64,
+      },
+    });
+
+    const columnsPanelController = this.appendChild(
+      new ColumnsPanelController()
+    );
+    const columnsPanelView = columnsPanelController.panel
+      .insertView(rootPanelView)
+      .set({
+        unitWidth: 1,
+        unitHeight: 15 / 16,
+        minFrameHeight: 72,
+      });
+
     const recentlyOccupiedListController = this.appendChild(
       new RoomListController(false),
       `List${RoomStatus.recentlyOccupied}`
     );
-    recentlyOccupiedListController.panel.insertView(rootPanelView).set({
+    recentlyOccupiedListController.panel.insertView(columnsPanelView).set({
       unitWidth: 1 / 2,
       unitHeight: 1,
       style: {
@@ -48,7 +70,7 @@ export class DeckBoardController extends BoardController {
       new DeckColumnController()
     );
     const ecoModeColumnPanelView = ecoModeColumnController.panel
-      .insertView(rootPanelView)
+      .insertView(columnsPanelView)
       .set({
         unitWidth: 1 / 2,
         unitHeight: 1,

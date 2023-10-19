@@ -196,10 +196,11 @@ export class RoomListController extends TimeTableController {
         RoomController
       );
       let ecoModeEnabled = value.get("ecoModeEnabled").booleanValue(false);
+      let disembarked = value.get("disembarked").booleanValue(false);
 
       if (
         roomController === null &&
-        this.owner.listEcoMode === ecoModeEnabled
+        this.owner.listEcoMode === (ecoModeEnabled || disembarked)
       ) {
         const regexResult = /\/ship\/\w+\/deck\/(\d+)\/room\/(\d+)/.exec(
           nodeUri.toString()
@@ -245,7 +246,7 @@ export class RoomListController extends TimeTableController {
       // remove roomController if its status does not fit this column anymore
       if (
         roomController !== null &&
-        this.owner.listEcoMode !== ecoModeEnabled
+        this.owner.listEcoMode !== (ecoModeEnabled || disembarked)
       ) {
         this.owner.removeChild(nodeUri.pathName);
       }
