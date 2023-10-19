@@ -89,8 +89,6 @@ export class RoomController extends TimeSeriesController {
         } else {
           deckBoardController.incrementDeckSavings(newValue - oldValue);
         }
-      } else {
-        console.log("NO DECKBOARDCONTROLLER FOUND!");
       }
     },
   })
