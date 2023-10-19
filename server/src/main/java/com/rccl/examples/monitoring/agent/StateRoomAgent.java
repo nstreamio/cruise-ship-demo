@@ -147,9 +147,12 @@ public class StateRoomAgent extends RCCLAbstractAgent {
             this.status.set(status);
 
             response = HttpResponse.create(HttpStatus.OK).body(String.format("Adjusting occupancyDetected to %s", new Date(occupancyTime)));
-          } else if ("badgeOut".equals(action))  {
+          } else if ("swipeBadge".equals(action) && this.status.get().getSlot("disembarked").booleanValue(false) == false)  {
             processBadgeOut();
             response = HttpResponse.create(HttpStatus.OK).body("Processed badge out");
+          } else if ("swipeBadge".equals(action) && this.status.get().getSlot("disembarked").booleanValue(false) == true)  {
+            processBadgeIn();
+            response = HttpResponse.create(HttpStatus.OK).body("Processed badge in");
           } else {
             response = HttpResponse.create(HttpStatus.BAD_REQUEST).body(String.format("Unknown action %s\n", action));
           }
@@ -160,15 +163,29 @@ public class StateRoomAgent extends RCCLAbstractAgent {
       });
 
 
-  @SwimLane("badgeOut")
-  final CommandLane<Record> badgeOut = this.<Record>commandLane()
+  @SwimLane("swipeBadge")
+  final CommandLane<Record> swipeBadge = this.<Record>commandLane()
       .onCommand(input -> {
         processBadgeOut();
       });
 
   private void processBadgeOut() {
     this.isExternallySimulated = true;
-    this.status.set(this.status.get().updatedSlot("badgeOut",  true));
+    this.status.set(this.status.get()
+      .updatedSlot("disembarked", true)
+      .updatedSlot("ecoModeEnabled", true)
+      .updatedSlot("hvacTemperature", 78)
+    );
+  }
+
+  private void processBadgeIn() {
+    this.isExternallySimulated = true;
+    this.status.set(this.status.get()
+      .updatedSlot("disembarked",  false)
+      .updatedSlot("ecoModeEnabled", false)
+      .updatedSlot("hvacTemperature", 71)
+      .updatedSlot("occupancyDetected", System.currentTimeMillis())
+    );
   }
 
   @SwimLane("init")
