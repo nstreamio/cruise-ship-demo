@@ -154,7 +154,9 @@ export class BadgePanelController extends PanelController {
 
     (this.inputView.attachView().node as HTMLInputElement).disabled = true;
 
-    const url = `${host}/ship/icon/deck/${deckNumber}/room/${roomNumber}?lane=simulate&action=swipeBadge`;
+    const url = `${host}${
+      host.endsWith("/") ? "" : "/"
+    }ship/icon/deck/${deckNumber}/room/${roomNumber}?lane=simulate&action=swipeBadge`;
 
     await fetch(url, {
       method: "POST",
