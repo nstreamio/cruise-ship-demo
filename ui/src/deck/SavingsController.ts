@@ -22,13 +22,15 @@ export class SavingsController extends PanelController {
   }
 
   private getTimeText(num: number): string {
+    console.log("num: ", num);
     let hoursText = "";
     if (num >= 1) {
-      hoursText = `${num.toFixed(0)} hours`;
+      hoursText = `${Math.floor(num)} hours`;
     }
     let minutesText = "";
     if ((num % 1).toFixed(2) !== "0.00") {
-      minutesText = `${((num % 1) * 60).toFixed(0)} minutes`;
+      let minutes = ((num % 1) * 60).toFixed(0);
+      minutesText = `${minutes} minutes`;
     }
 
     const result = `${hoursText}${
@@ -47,7 +49,7 @@ export class SavingsController extends PanelController {
       const savingsTimeTextEl = document.getElementById("savings-time-text");
       if (savingsTimeTextEl) {
         savingsTimeTextEl.innerText = `${this.owner.getTimeText(
-          newValue
+          Number.parseFloat(newValue.toFixed(2))
         )} spent in EcoMode`;
       }
       const savingsMoneyTextEl = document.getElementById("savings-money-text");
@@ -80,7 +82,7 @@ export class SavingsController extends PanelController {
           textAlign: "center",
         },
         text: `${this.owner.getTimeText(
-          this.owner.deckSavings.value
+          Number.parseFloat(this.owner.deckSavings.value.toFixed(2))
         )} spent in EcoMode`,
       });
       pTimeView.node.id = "savings-time-text";
