@@ -141,7 +141,7 @@ export class BadgePanelController extends PanelController {
     let host = urlParams.get("host");
     const baseUri = Uri.parse(document.location.href);
     if (!host) {
-      host = baseUri.base().withScheme("http").toString();
+      host = baseUri.base().withScheme("https").toString();
     } else if (host.startsWith("warp")) {
       host = `http${host.slice(4)}`;
     }
