@@ -145,6 +145,9 @@ export class BadgePanelController extends PanelController {
     } else if (host.startsWith("warp")) {
       host = `http${host.slice(4)}`;
     }
+    if (/nstream-demo/.test(host)) {
+      host = host.replace("nstream-demo", "services.nstream-demo");
+    }
 
     const deckNumber = roomNumber
       .toString()
