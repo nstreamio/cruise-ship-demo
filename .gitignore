@@ -27,4 +27,6 @@ target
 # ui stuff
 node_modules
 build
+dist
 package-lock.json
+server/src/main/resources/ui
