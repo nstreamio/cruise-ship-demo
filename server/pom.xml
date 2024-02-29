@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rccl</groupId>
-    <artifactId>rccl-hvac</artifactId>
+    <artifactId>demo-cruise-ship</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -65,7 +65,7 @@
                         <image>eclipse-temurin:17.0.8.1_1-jre</image>
                     </from>
                     <to>
-                        <image>nstream/demo-rccl-hvac:${version}</image>
+                        <image>nstream/demo-cruise-ship:${version}</image>
                         <auth>
                             <username>${env.REGISTRY_USERNAME}</username>
                             <password>${env.REGISTRY_PASSWORD}</password>

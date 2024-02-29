@@ -1,3 +1,2 @@
 library('jenkins-pipeline')
-
-demoServerUiPipeline("rccl-hvac", "maven")
+demoServerUiPipeline("cruise-ship", "maven")
