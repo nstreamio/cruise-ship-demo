@@ -159,7 +159,7 @@ export class BadgePanelController extends PanelController {
 
     const url = `${host}${
       host.endsWith("/") ? "" : "/"
-    }ship/icon/deck/${deckNumber}/room/${roomNumber}?lane=simulate&action=swipeBadge`;
+    }ship/olympic/deck/${deckNumber}/room/${roomNumber}?lane=simulate&action=swipeBadge`;
 
     await fetch(url, {
       method: "POST",

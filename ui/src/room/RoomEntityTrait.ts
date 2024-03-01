@@ -2,7 +2,7 @@
 // All rights reserved.
 import { Class, Lazy } from "@swim/util";
 import { EntityTrait, EntityTraitObserver } from "@nstream/domain";
-import { Graphics, PolygonIcon, VectorIcon } from "@swim/graphics";
+import { Graphics, VectorIcon } from "@swim/graphics";
 import { Model, TraitModelRef } from "@swim/model";
 import { RoomAspectTrait } from "./RoomAspectTrait";
 

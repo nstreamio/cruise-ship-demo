@@ -1,10 +1,10 @@
-package com.rccl.examples.monitoring.agent;
+package io.nstream.demos.cruise.agent;
 
 import swim.api.SwimLane;
 import swim.api.lane.CommandLane;
 import swim.api.lane.ValueLane;
 
-public class PassengerAgent extends RCCLAbstractAgent {
+public class PassengerAgent extends CruiseAbstractAgent {
   @SwimLane("info")
   final ValueLane<Record> info = this.valueLane();
 

@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.rccl</groupId>
+    <groupId>io.nstream.demos</groupId>
     <artifactId>demo-cruise-ship</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <swimos.version>4.1.0.12</swimos.version>
+        <swimos.version>4.2.14</swimos.version>
         <slf4j.version>2.0.7</slf4j.version>
     </properties>
 
@@ -72,7 +72,7 @@
                         </auth>
                     </to>
                     <container>
-                        <mainClass>com.rccl.examples.monitoring.EntryPoint</mainClass>
+                        <mainClass>io.nstream.demos.cruise.EntryPoint</mainClass>
                         <ports>
                             <port>9001/tcp</port>
                         </ports>

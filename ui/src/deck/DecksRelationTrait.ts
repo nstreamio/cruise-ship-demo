@@ -26,7 +26,7 @@ export class DecksRelationTrait extends RelationTrait<DeckEntityTrait> {
       // Create the deck entity
       const deckId = deckTrait.id.value!;
       deckTrait.title.setIntrinsic(`Deck ${deckId}`);
-      deckTrait.nodeUri.setIntrinsic("/ship/icon/deck/" + deckId);
+      deckTrait.nodeUri.setIntrinsic("/ship/olympic/deck/" + deckId);
       // Insert the portal (board of widgets) and the roomsRelation (list of rooms to navigate to) into the deck entity
       deckTrait.portal.insertModel();
       deckTrait.roomsRelation.insertModel();
