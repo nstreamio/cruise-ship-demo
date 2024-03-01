@@ -1,6 +1,6 @@
-package com.rccl.examples.monitoring;
+package io.nstream.demos.cruise;
 
-import com.rccl.examples.monitoring.agent.RCCLAbstractAgent;
+import io.nstream.demos.cruise.agent.CruiseAbstractAgent;
 import org.slf4j.Logger;
 import swim.api.agent.AbstractAgent;
 import swim.concurrent.Cont;
@@ -46,15 +46,15 @@ public class Utils {
     return value;
   }
 
-  public static String hvacAgentUri(RCCLAbstractAgent agent) {
+  public static String hvacAgentUri(CruiseAbstractAgent agent) {
     return String.format("/ship/%s/hvac/%s", agent.shipCode(), agent.hvacUnit());
   }
 
-  public static String deckAgentUri(RCCLAbstractAgent agent) {
+  public static String deckAgentUri(CruiseAbstractAgent agent) {
     return String.format("/ship/%s/deck/%s", agent.shipCode(), agent.deckNumber());
   }
 
-  public static String shipAgentUri(RCCLAbstractAgent agent) {
+  public static String shipAgentUri(CruiseAbstractAgent agent) {
     return String.format("/ship/%s", agent.shipCode());
   }
 

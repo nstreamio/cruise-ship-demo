@@ -1,10 +1,10 @@
-package com.rccl.examples.monitoring.agent;
+package io.nstream.demos.cruise.agent;
 
 import swim.api.agent.AbstractAgent;
 
-import static com.rccl.examples.monitoring.Utils.getAndCheckProp;
+import static io.nstream.demos.cruise.Utils.getAndCheckProp;
 
-public abstract class RCCLAbstractAgent extends AbstractAgent {
+public abstract class CruiseAbstractAgent extends AbstractAgent {
   public String shipCode() {
     return getAndCheckProp(this, "shipCode").stringValue();
   }

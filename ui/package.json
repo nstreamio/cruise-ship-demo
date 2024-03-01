@@ -86,7 +86,7 @@
     "copy-app": "npm run copy-libs && cp ./*.html ./dist && cp -rf ./assets/* ./dist/assets && cp -rf ./build/javascript/* ./dist/libs",
     "bundle": "cd ./src && rollup -c && npm run copy-app",
     "build": "npm run compile && npm run bundle",
-    "serve": "cd ../server && mvn compile exec:java -Dexec.mainClass=\"com.rccl.examples.monitoring.EntryPoint\"",
+    "serve": "cd ../server && mvn compile exec:java -Dexec.mainClass=\"io.nstream.demos.cruise.EntryPoint\"",
     "dev": "rm -rf ../server/src/main/resources/ui && npm run build && cp -r ./dist/ ../server/src/main/resources/ui && npm run serve"
   }
 }

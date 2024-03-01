@@ -1,12 +1,11 @@
-# RCCL-HVAC Demo
+# Cruise Ship Demo
 
-A tutorial application for teaching core Swim concepts.  See a hosted version
-of this app running at [https://rccl-hvac.nstream-demo.io](https://rccl-hvac.nstream-demo.io/).
+See a hosted version of this app running at [https://cruise-ship.nstream-demo.io](https://cruise-ship.nstream-demo.io).
 
 Run a local server. From within the `/server` directory, run:
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.rccl.examples.monitoring.EntryPoint"
+mvn compile exec:java -Dexec.mainClass="io.nstream.demos.cruise.EntryPoint"
 ```
 
 Look at the [Introspection UI](https://continuum.swim.inc/introspect/?host=warp://localhost:9001)
@@ -56,8 +55,8 @@ The [swim-cli](https://www.swimos.org/backend/cli/) is the simplest way to fetch
 ### Application APIs
 **Note:**
 * Below **swim-cli** commands for introspection are for streaming locally running application.
-* There is a hosted version of this application running here: https://rccl-hvac.nstream-demo.io/
-* To stream APIs for the hosted version, replace `warp://localhost:9001` in below commands with `warps://rccl-hvac.nstream-demo.io`
+* There is a hosted version of this application running here: https://cruise-ship.nstream-demo.io/
+* To stream APIs for the hosted version, replace `warp://localhost:9001` in below commands with `warps://cruise-ship.nstream-demo.io`
 
 1. **SHIP**:
 

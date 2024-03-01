@@ -1,7 +1,7 @@
 import csv
 import json
 
-shipCode = 'icon'
+shipCode = 'olympic'
 decks = {
     3: [
         3254,
@@ -2850,8 +2850,8 @@ stateroom_batch = []
 
 payload = {
     'info': {
-        "displayName": "Icon of the Seas",
-        "shipCode": "icon"
+        "displayName": "Old Reliable",
+        "shipCode": "olympic"
     },
     'decks': [
 
@@ -2903,5 +2903,5 @@ def set_default(obj):
         return list(obj)
     raise TypeError
 
-with open('src/main/resources/ships/icon/icon.json', 'w') as jsonFile:
+with open('src/main/resources/ships/olympic/olympic.json', 'w') as jsonFile:
     jsonFile.write(json.dumps(payload, indent=4, default=set_default))

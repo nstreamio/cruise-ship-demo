@@ -1,4 +1,4 @@
-package com.rccl.examples.monitoring.agent;
+package io.nstream.demos.cruise.agent;
 
 import java.util.Random;
 import org.slf4j.Logger;
@@ -17,10 +17,10 @@ import swim.structure.Value;
 import java.time.Duration;
 import java.util.Date;
 
-import static com.rccl.examples.monitoring.Utils.deckAgentUri;
-import static com.rccl.examples.monitoring.Utils.logCommand;
+import static io.nstream.demos.cruise.Utils.deckAgentUri;
+import static io.nstream.demos.cruise.Utils.logCommand;
 
-public class StateRoomAgent extends RCCLAbstractAgent {
+public class StateRoomAgent extends CruiseAbstractAgent {
   private static final Logger log = LoggerFactory.getLogger(StateRoomAgent.class);
   private static final Duration hvacAdjustDuration = Duration.ofMinutes(10); // must update alongside OCC_DETECTED_THRESHOLD in constants.ts
 

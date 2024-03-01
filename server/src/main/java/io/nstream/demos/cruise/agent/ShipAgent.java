@@ -1,6 +1,6 @@
-package com.rccl.examples.monitoring.agent;
+package io.nstream.demos.cruise.agent;
 
-import com.rccl.examples.monitoring.ResourceUtils;
+import io.nstream.demos.cruise.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swim.api.SwimLane;
@@ -10,9 +10,9 @@ import swim.api.lane.ValueLane;
 import swim.structure.Record;
 import swim.structure.Value;
 
-import static com.rccl.examples.monitoring.Utils.logCommand;
+import static io.nstream.demos.cruise.Utils.logCommand;
 
-public class ShipAgent extends RCCLAbstractAgent {
+public class ShipAgent extends CruiseAbstractAgent {
   private static final Logger log = LoggerFactory.getLogger(ShipAgent.class);
 
   @SwimLane("info")

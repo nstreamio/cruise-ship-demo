@@ -1,4 +1,4 @@
-package com.rccl.examples.monitoring;
+package io.nstream.demos.cruise;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ public class EntryPoint {
   public static void main(String[] args) throws Exception {
     final Kernel kernel = ServerLoader.loadServer();
     kernel.start();
-    log.info("Running RCCL Plane");
+    log.info("Running Cruise Plane");
     kernel.run();
   }
 

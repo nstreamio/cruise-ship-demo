@@ -1,35 +1,35 @@
 @kernel(class: "swim.meta.MetaKernel")
 @kernel(class: "swim.service.web.UiRouter")
 
-tutorial: @fabric {
-    @plane(class: "com.rccl.examples.monitoring.RCCLPlane")
+cruise-ship: @fabric {
+    @plane(class: "io.nstream.demos.cruise.CruisePlane")
 
     @node {
         pattern: "/ship/:shipCode/deck/:deckNumber"
-        @agent(class: "com.rccl.examples.monitoring.agent.DeckAgent")
+        @agent(class: "io.nstream.demos.cruise.agent.DeckAgent")
     }
     @node {
         pattern: "/ship/:shipCode/deck/:deckNumber/room/:roomNumber"
-        @agent(class: "com.rccl.examples.monitoring.agent.StateRoomAgent")
+        @agent(class: "io.nstream.demos.cruise.agent.StateRoomAgent")
     }
     @node {
         pattern: "/ship/:shipCode/hvac/:hvacUnit"
-        @agent(class: "com.rccl.examples.monitoring.agent.HvacAgent")
+        @agent(class: "io.nstream.demos.cruise.agent.HvacAgent")
     }
     @node {
         pattern: "/ship/:shipCode/hvac/:hvacUnit/zone/:zoneId"
-        @agent(class: "com.rccl.examples.monitoring.agent.HvacZoneAgent")
+        @agent(class: "io.nstream.demos.cruise.agent.HvacZoneAgent")
     }
     @node {
-        uri: "/ship/icon"
-        @agent(class: "com.rccl.examples.monitoring.agent.ShipAgent") {
-            seed: "/ships/icon/icon.json"
+        uri: "/ship/olympic"
+        @agent(class: "io.nstream.demos.cruise.agent.ShipAgent") {
+            seed: "/ships/olympic/olympic.json"
         }
     }
 }
 
 @web(port: 9001) {
-    space: "tutorial"
+    space: "cruise-ship"
     @websocket {
         serverCompressionLevel: 0# -1 = default; 0 = off; 1-9 = deflate level
         clientCompressionLevel: 0# -1 = default; 0 = off; 1-9 = deflate level

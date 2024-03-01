@@ -1,4 +1,4 @@
-package com.rccl.examples.monitoring.agent;
+package io.nstream.demos.cruise.agent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +8,10 @@ import swim.api.lane.ValueLane;
 import swim.structure.Record;
 import swim.structure.Value;
 
-import static com.rccl.examples.monitoring.Utils.hvacAgentUri;
-import static com.rccl.examples.monitoring.Utils.logCommand;
+import static io.nstream.demos.cruise.Utils.hvacAgentUri;
+import static io.nstream.demos.cruise.Utils.logCommand;
 
-public class HvacZoneAgent extends RCCLAbstractAgent {
+public class HvacZoneAgent extends CruiseAbstractAgent {
   private static final Logger log = LoggerFactory.getLogger(HvacZoneAgent.class);
 
   @SwimLane("status")
