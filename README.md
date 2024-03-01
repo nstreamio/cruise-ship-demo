@@ -22,11 +22,24 @@ Simulate swiping a badge on or off the ship.
 curl -X POST 'http://localhost:9001/ship/icon/deck/3/room/3421?lane=simulate&action=swipeBadge'
 ```
 
+## UI
 
-To edit the UI, make your changes and from within the `/ui` directory, run:
+Install dependencies
 
 ```bash
 npm run build
+```
+
+Build the UI
+
+```bash
+npm run build
+```
+
+Build the UI and start the Swim application, serving the UI with your latest changes. Make sure you are not already running the backend Swim application before you run this command.
+
+```bash
+npm run dev
 ```
 
 ### A Note on Calculating Savings

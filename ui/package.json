@@ -1,12 +1,12 @@
 {
-  "name": "@swim/royal-caribbean-demo",
+  "name": "@swim/cruise-ship-demo",
   "version": "0.1.0",
-  "description": "Swim Royal Caribbean Demo",
-  "homepage": "https://github.com/swimos/royal-caribbean-demo",
-  "copyright": "2015-2022 Swim.inc",
+  "description": "Cruise Ship Demo",
+  "homepage": "https://github.com/nstreamio/customers-rccl-hvac",
+  "copyright": "2015-2024 Swim.inc",
   "license": "Apache-2.0",
-  "repository": "https://github.com/swimos/royal-caribbean-demo.git",
-  "main": "build/javascript/royal-caribbean-demo.js",
+  "repository": "https://github.com/nstreamio/customers-rccl-hvac.git",
+  "main": "build/javascript/cruise-ship-demo.js",
   "devDependencies": {
     "@microsoft/api-extractor": "7.35",
     "@rollup/plugin-node-resolve": "15",
@@ -73,7 +73,8 @@
     "@swim/window": "4.0.0-dev.20230923"
   },
   "scripts": {
-    "mkdir-ui": "mkdir -p dist/libs && mkdir -p dist/assets",
+    "mkdir-ui": "mkdir -p ./dist/libs && mkdir -p ./dist/assets && mkdir -p ./build/javascript",
+    "compile": "tsc -b",
     "copy-core": "cp node_modules/@swim/core/dist/umd/*.min.js* dist/libs",
     "copy-gui": "cp node_modules/@nstream/gui/dist/umd/*.min.js* dist/libs",
     "copy-host": "cp node_modules/@swim/host/dist/umd/*.min.js* dist/libs",
@@ -81,11 +82,11 @@
     "copy-ui": "cp node_modules/@swim/ui/dist/umd/*.min.js* dist/libs",
     "copy-ux": "cp node_modules/@swim/ux/dist/umd/*.min.js* dist/libs",
     "copy-vis": "cp node_modules/@swim/vis/dist/umd/*.min.js* dist/libs",
-    "copy-libs": "npm run copy-core && npm run copy-host && npm run copy-ui && npm run copy-ux && npm run copy-vis && npm run copy-maps && npm run copy-gui",
-    "compile": "tsc -b",
-    "bundle": "cd src/ && rollup -c && npm run copy-app",
-    "copy-app": "cp build/javascript/*.min.js* dist/libs && cp assets/* dist/assets && cp index.html dist/",
+    "copy-libs": "npm run mkdir-ui && npm run copy-core && npm run copy-host && npm run copy-ui && npm run copy-ux && npm run copy-vis && npm run copy-maps && npm run copy-gui",
+    "copy-app": "npm run copy-libs && cp ./*.html ./dist && cp -rf ./assets/* ./dist/assets && cp -rf ./build/javascript/* ./dist/libs",
+    "bundle": "cd ./src && rollup -c && npm run copy-app",
     "build": "npm run compile && npm run bundle",
-    "postinstall": "npm run mkdir-ui && npm run copy-libs"
+    "serve": "cd ../server && mvn compile exec:java -Dexec.mainClass=\"com.rccl.examples.monitoring.EntryPoint\"",
+    "dev": "rm -rf ../server/src/main/resources/ui && npm run build && cp -r ./dist/ ../server/src/main/resources/ui && npm run serve"
   }
 }
