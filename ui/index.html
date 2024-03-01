@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Royal Caribbean Demo</title>
+    <title>Cruise Ship Demo</title>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -28,7 +28,7 @@
 <script src="libs/swim-vis.min.js"></script>
 <script src="libs/swim-maps.min.js"></script>
 <script src="libs/nstream-gui.min.js"></script>
-<script src="libs/royal-caribbean-demo.min.js"></script>
+<script src="libs/cruise-ship-demo.min.js"></script>
 <script>
 
 if (navigator.standalone) {
@@ -64,9 +64,9 @@ if (!host) {
 }
 
 const shipModel = new swim.Model();
-const ShipEntityTrait = shipModel.appendTrait(swim.royalcaribbeandemo.ShipEntityTrait, "entity");
+const ShipEntityTrait = shipModel.appendTrait(swim.cruiseshipdemo.ShipEntityTrait, "entity");
 ShipEntityTrait.hostUri.set(host);
-ShipEntityTrait.nodeUri.set("/ship/icon");
+ShipEntityTrait.nodeUri.set("/ship/olympic");
 shipModel.appendTrait(swim.SelectableTrait, "selectable");
 shipModel.mount();
 

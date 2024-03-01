@@ -21,7 +21,7 @@ export class ShipAspectTrait extends AspectTrait {
   // We will use the 'DeckBoardController' which is 2 panels showing the statuses of a deck's rooms
   override createTabController(): SheetController | null {
     return new DeckBoardController().set({
-      nodeUri: "/ship/icon/deck/3",
+      nodeUri: "/ship/olympic/deck/3",
     });
   }
 

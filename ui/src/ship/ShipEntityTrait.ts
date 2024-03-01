@@ -14,7 +14,7 @@ export interface ShipEntityTraitObserver<T extends ShipEntityTrait = ShipEntityT
 export class ShipEntityTrait extends EntityTrait {
   constructor() {
     super();
-    this.title.setIntrinsic("ship/icon");
+    this.title.setIntrinsic("ship/olympic");
   }
 
   declare readonly observerType?: Class<ShipEntityTraitObserver>;

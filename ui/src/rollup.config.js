@@ -3,7 +3,7 @@ import sourcemaps from "rollup-plugin-sourcemaps";
 import {terser} from "rollup-plugin-terser";
 import * as pkg from "../package.json";
 
-const script = "royal-caribbean-demo";
+const script = "cruise-ship-demo";
 
 const external = [/^@nstream\//, /^@swim\//];
 
@@ -54,7 +54,7 @@ export default [
     input: "../build/typescript/index.js",
     output: {
       file: `../build/javascript/${script}.min.js`,
-      name: "swim.royalcaribbeandemo",
+      name: "swim.cruiseshipdemo",
       format: "umd",
       globals: globals,
       generatedCode: {

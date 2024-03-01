@@ -180,7 +180,7 @@ export class RoomController extends TimeSeriesController {
       }
     },
     didSet(value: Value) {
-      // @event(node:"/ship/icon/deck/3/room/3150",lane:status){ecoModeEnabled:false,occupancyDetected:1697148785053,hvacTemperature:71,roomTemperature:71}
+      // @event(node:"/ship/olympic/deck/3/room/3150",lane:status){ecoModeEnabled:false,occupancyDetected:1697148785053,hvacTemperature:71,roomTemperature:71}
       const occupancyDetected = value.get("occupancyDetected").numberValue(0);
       const hvacTemp = value.get("hvacTemperature").numberValue(0);
       const disembarked = value.get("disembarked").booleanValue(false);
