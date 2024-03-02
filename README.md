@@ -13,12 +13,12 @@ Look at the [Introspection UI](https://continuum.swim.inc/introspect/?host=warp:
 Simulate an empty room.
 
 ```bash
-curl -X POST 'http://localhost:9001/ship/icon/deck/3/room/3421?lane=simulate&action=leaveroom'
+curl -X POST 'http://localhost:9001/ship/olympic/deck/3/room/3421?lane=simulate&action=leaveroom'
 ```
 
 Simulate swiping a badge on or off the ship.
 ```bash
-curl -X POST 'http://localhost:9001/ship/icon/deck/3/room/3421?lane=simulate&action=swipeBadge'
+curl -X POST 'http://localhost:9001/ship/olympic/deck/3/room/3421?lane=simulate&action=swipeBadge'
 ```
 
 ## UI
@@ -60,16 +60,16 @@ The [swim-cli](https://www.swimos.org/backend/cli/) is the simplest way to fetch
 
 1. **SHIP**:
 
-(Below, ship "icon" is used as an example)
+(Below, ship "olympic" is used as an example)
 
 * Display name of the ship
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon -l info
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic -l info
 ```
 
 * List of decks associated with the ship
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon -l decks
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic -l decks
 ```
 
 2. **ROOM**:
@@ -78,17 +78,17 @@ swim-cli sync -h warp://localhost:9001 -n /ship/icon -l decks
 
 * Room Info - provides room number, deck number, ship code, hvac zone and hvac unit details.
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/deck/3/room/3421 -l info
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/deck/3/room/3421 -l info
 ```
 
 * Room Status - provides the room's status metrics.
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/deck/3/room/3421 -l status
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/deck/3/room/3421 -l status
 ```
 
 * Duration of Eco Mode
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/deck/3/room/3421 -l ecoModeDuration
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/deck/3/room/3421 -l ecoModeDuration
 ```
 
 3. **DECK**:
@@ -97,7 +97,7 @@ swim-cli sync -h warp://localhost:9001 -n /ship/icon/deck/3/room/3421 -l ecoMode
 
 * Status details of the rooms associated with the deck
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/deck/3 -l stateRooms
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/deck/3 -l stateRooms
 ```
 
 4. **HVAC**:
@@ -106,12 +106,12 @@ swim-cli sync -h warp://localhost:9001 -n /ship/icon/deck/3 -l stateRooms
 
 * Provides the associated deck number
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/hvac/3-2 -l info
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/hvac/3-2 -l info
 ```
 
 * Status details of all the zones associated with the hvac unit. 
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/hvac/3-2 -l hvacZones
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/hvac/3-2 -l hvacZones
 ```
 
 5. **ZONE**:
@@ -120,12 +120,12 @@ swim-cli sync -h warp://localhost:9001 -n /ship/icon/hvac/3-2 -l hvacZones
 
 * Requested temperature and zone enabled status details of the zone 
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/hvac/3-2/zone/3-3668 -l status
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/hvac/3-2/zone/3-3668 -l status
 ```
 
 * Current temperature of the zone 
 ```
-swim-cli sync -h warp://localhost:9001 -n /ship/icon/hvac/3-2/zone/3-3668 -l temperature
+swim-cli sync -h warp://localhost:9001 -n /ship/olympic/hvac/3-2/zone/3-3668 -l temperature
 ```
 
 ### Introspection APIs
@@ -155,29 +155,29 @@ swim-cli sync -h warp://localhost:9001 -n swim:meta:host -l nodes#/
 You can stream the utilization of an individual web agent:
 
 ```sh
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon -l pulse
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic -l pulse
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fdeck%2f3 -l pulse
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fdeck%2f3 -l pulse
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fdeck%2f3%2froom%2f3421 -l pulse
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fdeck%2f3%2froom%2f3421 -l pulse
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fhvac%2f3-2 -l pulse
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fhvac%2f3-2 -l pulse
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fhvac%2f3-2%2fzone%2f3-3668 -l pulse
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fhvac%2f3-2%2fzone%2f3-3668 -l pulse
 ```
 
 And discover its lanes:
 
 ```sh
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon -l lanes
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic -l lanes
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fdeck%2f3 -l lanes
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fdeck%2f3 -l lanes
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fdeck%2f3%2froom%2f3421 -l lanes
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fdeck%2f3%2froom%2f3421 -l lanes
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fhvac%2f3-2 -l lanes
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fhvac%2f3-2 -l lanes
 
-swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2ficon%2fhvac%2f3-2%2fzone%2f3-3668 -l lanes
+swim-cli sync -h warp://localhost:9001 -n swim:meta:node/%2fship%2folympic%2fhvac%2f3-2%2fzone%2f3-3668 -l lanes
 ```
 
 #### Mesh introspection
