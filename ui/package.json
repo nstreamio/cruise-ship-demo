@@ -2,10 +2,10 @@
   "name": "@swim/cruise-ship-demo",
   "version": "0.1.0",
   "description": "Cruise Ship Demo",
-  "homepage": "https://github.com/nstreamio/customers-rccl-hvac",
+  "homepage": "https://github.com/nstreamio/cruise-ship-demo",
   "copyright": "2015-2024 Swim.inc",
   "license": "Apache-2.0",
-  "repository": "https://github.com/nstreamio/customers-rccl-hvac.git",
+  "repository": "https://github.com/nstreamio/cruise-ship-demo.git",
   "main": "build/javascript/cruise-ship-demo.js",
   "devDependencies": {
     "@microsoft/api-extractor": "7.35",
