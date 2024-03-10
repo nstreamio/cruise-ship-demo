@@ -8,7 +8,7 @@ Run a local server. From within the `/server` directory, run:
 mvn compile exec:java -Dexec.mainClass="io.nstream.demos.cruise.EntryPoint"
 ```
 
-Look at the [Introspection UI](https://continuum.swim.inc/introspect/?host=warp://localhost:9001)
+  Look at the [Introspection UI](https://introspection.nstream.io/?host=warp://localhost:9001)
 
 Simulate an empty room.
 
