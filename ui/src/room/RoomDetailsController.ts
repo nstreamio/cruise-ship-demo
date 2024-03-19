@@ -41,59 +41,31 @@ export class RoomDetailsController extends TimeTableController {
     },
     createView(): HtmlView {
       const divView = new HtmlView(document.createElement("div")).set({
-        style: {
-          margin: 24,
-        },
-        classList: ["rbc-details-container"],
+        classList: ["rdc-details-container"],
       });
 
       const shipCodeView = divView.appendChild("p").set({
-        style: {
-          marginTop: 12,
-          marginBottom: 12,
-          fontSize: 16,
-          fontFamily: "sans-serif",
-        },
+        classList: ['rdc-detail']
       });
       shipCodeView.node.innerText = `Ship code: ${this.owner.shipCode.value.valueOf()}`;
 
       const deckNumberView = divView.appendChild("p").set({
-        style: {
-          marginTop: 12,
-          marginBottom: 12,
-          fontSize: 16,
-          fontFamily: "sans-serif",
-        },
+        classList: ['rdc-detail']
       });
       deckNumberView.node.innerText = `Deck number: ${this.owner.deckNumber.value.valueOf()}`;
 
       const roomNumberView = divView.appendChild("p").set({
-        style: {
-          marginTop: 12,
-          marginBottom: 12,
-          fontSize: 16,
-          fontFamily: "sans-serif",
-        },
+        classList: ['rdc-detail']
       });
       roomNumberView.node.innerText = `Room number: ${this.owner.roomNumber.value.valueOf()}`;
 
       const hvacUnitView = divView.appendChild("p").set({
-        style: {
-          marginTop: 12,
-          marginBottom: 12,
-          fontSize: 16,
-          fontFamily: "sans-serif",
-        },
+        classList: ['rdc-detail']
       });
       hvacUnitView.node.innerText = `HVAC unit: ${this.owner.hvacUnit.value.valueOf()}`;
 
       const hvacZoneView = divView.appendChild("p").set({
-        style: {
-          marginTop: 12,
-          marginBottom: 12,
-          fontSize: 16,
-          fontFamily: "sans-serif",
-        },
+        classList: ['rdc-detail']
       });
       hvacZoneView.node.innerText = `HVAC zone: ${this.owner.hvacZone.value.valueOf()}`;
 

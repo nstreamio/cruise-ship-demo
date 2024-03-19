@@ -46,10 +46,6 @@ export class RoomBoardController extends BoardController {
     },
     createView(): PanelView {
       return PanelView.create().set({
-        style: {
-          margin: 6,
-          backgroundColor: "#212121",
-        },
         classList: ["room-board-controller"],
       });
     },

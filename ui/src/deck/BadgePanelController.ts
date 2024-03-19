@@ -19,38 +19,19 @@ export class BadgePanelController extends PanelController {
     viewType: HtmlView,
     createView(): HtmlView {
       const containerView = new HtmlView(document.createElement("div")).set({
-        style: {
-          display: "flex",
-          position: "relative",
-          backgroundColor: "#212121",
-          borderRadius: "4px",
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          marginLeft: "6px",
-        },
+        classList: ['badge-panel-container'],
       });
       containerView.node.style.width = "calc(100% - 12px)";
       containerView.node.style.height = "calc(100% - 6px)";
 
       const header = new HtmlView(document.createElement("p")).set({
-        style: {
-          position: "absolute",
-          top: "6px",
-          left: "12px",
-          fontSize: "14px",
-          color: "#E2E2E2",
-          opacity: 0.55,
-          margin: "0px",
-        },
+        classList: ['badge-panel-header'],
         text: "Dev Panel",
       });
       containerView.appendChild(header);
 
       const form = new HtmlView(document.createElement("form")).set({
-        style: {
-          marginLeft: "93px",
-        },
+        classList: ['badge-panel-form'],
       });
       const that = this;
       (form.node as HTMLFormElement).addEventListener("submit", function (e) {
@@ -65,11 +46,7 @@ export class BadgePanelController extends PanelController {
       containerView.appendChild(form);
 
       const label = new HtmlView(document.createElement("label")).set({
-        style: {
-          fontSize: "14px",
-          color: "#CCCCCC",
-          textAlign: "center",
-        },
+        classList: ['badge-panel-label'],
         text: "Badge guest in/out",
       });
       form.appendChild(label);
@@ -77,20 +54,7 @@ export class BadgePanelController extends PanelController {
       this.owner.inputView.insertView(label);
 
       const submit = new HtmlView(document.createElement("input")).set({
-        style: {
-          fontSize: "14px",
-          color: "#000000",
-          backgroundColor: "#CCCCCC",
-          borderRadius: "4px",
-          textAlign: "center",
-          padding: "2px 6px",
-          width: "72px",
-          cursor: "pointer",
-          boxShadow: "none",
-          borderColor: "transparent",
-          borderStyle: "none",
-          borderWidth: "0px",
-        },
+        classList: ['badge-panel-submit'],
         text: "Submit",
       });
       (submit.node as HTMLInputElement).type = "submit";
@@ -105,21 +69,7 @@ export class BadgePanelController extends PanelController {
     viewType: HtmlView,
     createView(): HtmlView {
       const input = new HtmlView(document.createElement("input")).set({
-        style: {
-          fontSize: "14px",
-          backgroundColor: "#444444",
-          borderRadius: "4px",
-          textAlign: "left",
-          width: "80px",
-          paddingTop: "0px",
-          paddingRight: "4px",
-          paddingBottom: "0px",
-          paddingLeft: "4px",
-          marginTop: "0px",
-          marginRight: "12px",
-          marginBottom: "0px",
-          marginLeft: "12px",
-        },
+        classList: ['badge-panel-input'],
       });
       (input.node as HTMLInputElement).type = "text";
       (input.node as HTMLInputElement).name = "roomNumber";

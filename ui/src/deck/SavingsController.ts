@@ -12,12 +12,7 @@ export class SavingsController extends PanelController {
   }
 
   protected override onMount(): void {
-    const panelView = this.panel.attachView().set({
-      style: {
-        backgroundColor: "#212121",
-      },
-      classList: ["savings-controller-panel"],
-    });
+    const panelView = this.panel.attachView();
     this.content.insertView(panelView);
   }
 
@@ -65,37 +60,23 @@ export class SavingsController extends PanelController {
     viewType: HtmlView,
     createView(): HtmlView {
       const containerView = new HtmlView(document.createElement("div")).set({
-        style: {
-          backgroundColor: "#212121",
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        },
+        classList: ['savings-text-container'],
       });
       const pTimeView = new HtmlView(document.createElement("p")).set({
-        style: {
-          fontSize: "18px",
-          textAlign: "center",
-        },
+        classList: ['savings-text'],
         text: `${this.owner.getTimeText(
           Number.parseFloat(this.owner.deckSavings.value.toFixed(2))
         )} spent in EcoMode`,
       });
-      pTimeView.node.id = "savings-time-text";
+      pTimeView.node.id = "savings-text";
       containerView.appendChild(pTimeView);
       const pMoneyView = new HtmlView(document.createElement("p")).set({
-        style: {
-          fontSize: "18px",
-          textAlign: "center",
-        },
+        classList: ['savings-text'],
         text: `Deck ${
           this.owner.deckNumber
         }'s savings: $${this.owner.deckSavings.value.toFixed(2)}`,
       });
-      pMoneyView.node.id = "savings-money-text";
+      pMoneyView.node.id = "savings-text";
       containerView.appendChild(pMoneyView);
 
       return containerView;
