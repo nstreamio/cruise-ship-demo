@@ -93,9 +93,7 @@ export class DeckBoardController extends BoardController {
     ecoModeSavingsController.panel.insertView(ecoModeColumnPanelView).set({
       unitWidth: 1,
       unitHeight: 1 / 4,
-      style: {
-        margin: 6,
-      },
+      classList: ['savings-controller-panel'],
       headerTitle: "EcoMode Savings",
     });
   }

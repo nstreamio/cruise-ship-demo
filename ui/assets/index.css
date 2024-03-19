@@ -1,0 +1,191 @@
+html, body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  --primary-light: #F9F9F9;
+  --secondary-light: #F1F1F1;
+  --secondary-dark: #212121;
+  --eco-mode-green-light: #52b052;
+  --eco-mode-green-dark: #83D456;
+  position: fixed;
+  margin: 0px;
+  overflow: hidden;
+}
+
+input:focus {
+  border-style: solid !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  border-width: 1px !important;
+}
+
+.col.col-text span {
+  color: #000000 !important;
+  opacity: 0.75 !important;
+}
+
+.sheet.board .cell.cell-text span {
+  font-weight: 500;
+}
+
+.header-title {
+  font-weight: 500;
+}
+
+.ecoModeEnabled {
+  color: var(--eco-mode-green-light) !important;
+}
+
+.savings-controller-panel {
+  margin: 6px;
+  border-radius: 4px;
+}
+
+.savings-controller-panel, .savings-controller-panel * {
+  background-color: var(--secondary-light);
+  color: #000000;
+}
+
+.savings-text-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.savings-text {
+  font-size: 18px;
+  text-align: center;
+}
+
+.room-board-controller {
+  margin: 6px;
+  background-color: transparent;
+}
+
+.rdc-details-container {
+  margin: 24px;
+}
+
+.rdc-detail {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-family: -apple-system, system-ui, sans-serif;
+}
+
+/* Badge Panel */
+.badge-panel-container {
+  display: flex;
+  position: relative;
+  background-color: var(--secondary-light);
+  border-radius: 4px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 6px;
+}
+
+.badge-panel-header {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  opacity: .5;
+  margin: 0px;
+}
+
+.badge-panel-form {
+  margin-left: 93px;
+}
+
+.badge-panel-label {
+  font-size: 14px;
+  color: #000000;
+  opacity: 0.75;
+  text-align: center;
+}
+
+.badge-panel-input {
+  color: #000000;
+  opacity: 1;
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+.badge-panel-submit {
+  font-size: 14px;
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  text-align: center;
+  padding: 2px 6px;
+  width: 72px;
+  cursor: pointer;
+  box-shadow: none;
+  border-color: transparent;
+  border-style: none;
+  border-width: 0px;
+}
+
+.badge-panel-input {
+  font-size: 14px;
+  background-color: var(--primary-light);
+  border-radius: 4px;
+  border-color: rgba(0, 0, 0, 0.75);
+  text-align: left;
+  width: 80px;
+  padding: 0px 4px;
+  margin: 0px 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .col.col-text span {
+    color: #CCCCCC !important;
+    opacity: 1 !important;
+  }
+
+  .sheet.board .cell.cell-text span {
+    font-weight: 400;
+  }
+
+  .ecoModeEnabled {
+    color: var(--eco-mode-green-dark) !important;
+  }
+
+  .savings-controller-panel, .savings-controller-panel * {
+    background-color: var(--secondary-dark);
+    color: #CCCCCC;
+  }
+
+  /* Badge Panel */
+  .badge-panel-container {
+    background-color: var(--secondary-dark);
+  }
+
+  .badge-panel-header {
+    color: #E2E2E2;
+  }
+  
+  .badge-panel-label {
+    color: #CCCCCC;
+    opacity: 1;
+  }
+  
+  .badge-panel-input {
+    color: #CCCCCC;
+    opacity: 1;
+  }
+  
+  .badge-panel-submit {
+    color: #000000;
+    background-color: #CCCCCC;
+  }
+  
+  .badge-panel-input {
+    background-color: #444444;
+  }
+}

@@ -6,19 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="assets/favicon.ico" />
-    <style>
-      html, body {
-        -webkit-tap-highlight-color: transparent;
-      }
-      .ecoModeEnabled {
-        color: #83d456 !important;
-      }
-      input:focus {
-        border-style: solid !important;
-        border-color: rgba(255, 255, 255, 0.25) !important;
-        border-width: 1px !important;
-      }
-    </style>
+    <link rel="stylesheet" href="assets/index.css" />
 </head>
 <body swim-theme style="display: flex;">
 <script src="libs/swim-core.min.js"></script>
@@ -38,9 +26,6 @@ if (navigator.standalone) {
   document.documentElement.style.width = "100%";
   document.documentElement.style.height = "100%";
 }
-document.body.style.position = "fixed";
-document.body.style.margin = "0";
-document.body.style.overflow = "hidden";
 if (navigator.standalone) {
   document.body.style.width = "100vw";
   document.body.style.height = "100vh";
